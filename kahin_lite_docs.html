@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAHIN Lite — Technical Documentation v1.1.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #05080f;
+    --surface: #0b101c;
+    --surface2: #111827;
+    --border: #1a2436;
+    --border2: #243044;
+    --jade: #10b981;
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --purple: #a78bfa;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --dim: #94a3b8;
+    --mono: 'DM Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --body: 'Inter', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 14px;
+    line-height: 1.6;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 280px;
+    min-height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    z-index: 100;
+  }
+
+  .sidebar-brand {
+    padding: 24px 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand-title { font-family: var(--display); font-size: 18px; font-weight: 800; color: white; letter-spacing: -0.02em; }
+  .brand-title .jade { color: var(--jade); }
+  .brand-version { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.1em; margin-top: 4px; }
+
+  .sidebar-section {
+    padding: 20px 16px 8px;
+  }
+  .sidebar-section-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0 8px;
+    margin-bottom: 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--dim);
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+    margin-bottom: 2px;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: rgba(16,185,129,0.08); color: var(--jade); border-color: rgba(16,185,129,0.15); }
+  .nav-item .icon { font-size: 14px; flex-shrink: 0; width: 18px; text-align: center; }
+  .nav-item .num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-left: auto;
+    padding: 1px 6px;
+    background: var(--surface2);
+    border-radius: 4px;
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .back-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.15s;
+  }
+  .back-link:hover { color: var(--jade); background: rgba(16,185,129,0.06); }
+
+  /* MAIN CONTENT */
+  .main {
+    margin-left: 280px;
+    flex: 1;
+    min-height: 100vh;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: rgba(5,8,15,0.9);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(20px);
+  }
+  .breadcrumb {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.06em;
+  }
+  .breadcrumb span { color: var(--dim); }
+  .breadcrumb .sep { color: var(--border2); }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--jade); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+
+  /* CONTENT AREA */
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 64px 48px;
+  }
+
+  /* PAGE HEADER */
+  .page-header {
+    margin-bottom: 64px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  .doc-category {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--jade);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .doc-category::before { content:''; width:20px; height:1px; background:var(--jade); }
+  .page-title {
+    font-family: var(--display);
+    font-size: 48px;
+    font-weight: 800;
+    color: white;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+  }
+  .page-sub { font-size: 16px; color: var(--dim); line-height: 1.7; max-width: 640px; margin-bottom: 24px; }
+  .page-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .meta-chip {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .meta-chip.jade { color: var(--jade); background: rgba(16,185,129,0.06); border-color: rgba(16,185,129,0.15); }
+
+  /* SECTION */
+  .doc-section { margin-bottom: 72px; }
+  .doc-section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: var(--display);
+    font-size: 64px;
+    font-weight: 800;
+    color: rgba(16,185,129,0.07);
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: -8px;
+    letter-spacing: -0.04em;
+  }
+  .section-header-text { flex: 1; }
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--jade);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .section-h {
+    font-family: var(--display);
+    font-size: 24px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .section-sub { font-size: 13px; color: var(--muted); }
+
+  /* TEXT CONTENT */
+  .prose p { font-size: 14px; color: var(--dim); line-height: 1.8; margin-bottom: 16px; }
+  .prose strong { color: var(--text); font-weight: 600; }
+  .prose code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 7px;
+    border-radius: 5px;
+    color: var(--jade);
+  }
+
+  /* INFO BOXES */
+  .infobox {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .infobox::before { content:''; position:absolute; top:0;left:0; width:3px; height:100%; background:var(--jade); }
+  .infobox.amber::before { background: var(--amber); }
+  .infobox.red::before { background: var(--red); }
+  .infobox.blue::before { background: var(--blue); }
+  .infobox.purple::before { background: var(--purple); }
+  .infobox-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--jade);
+    margin-bottom: 8px;
+  }
+  .infobox.amber .infobox-title { color: var(--amber); }
+  .infobox.red .infobox-title { color: var(--red); }
+  .infobox.blue .infobox-title { color: var(--blue); }
+  .infobox.purple .infobox-title { color: var(--purple); }
+  .infobox-body { font-size: 13px; color: var(--dim); line-height: 1.7; }
+  .infobox-body strong { color: var(--text); }
+
+  /* HIERARCHY LIST */
+  .hierarchy { list-style: none; margin: 0; padding: 0; }
+  .hierarchy li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--dim);
+    line-height: 1.6;
+  }
+  .hierarchy li:last-child { border: none; }
+  .hierarchy-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--jade);
+    background: rgba(16,185,129,0.08);
+    border: 1px solid rgba(16,185,129,0.15);
+    padding: 3px 8px;
+    border-radius: 5px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .hierarchy-num.amber { color: var(--amber); background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.15); }
+  .hierarchy-num.red { color: var(--red); background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.2); }
+  .hier-title { font-weight: 600; color: var(--text); display: block; margin-bottom: 3px; }
+
+  /* GRID CARDS */
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 24px 0; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: var(--border2); }
+  .card-icon { font-size: 20px; margin-bottom: 10px; }
+  .card-title { font-family: var(--display); font-size: 14px; font-weight: 700; color: white; margin-bottom: 6px; }
+  .card-body { font-size: 12px; color: var(--muted); line-height: 1.65; }
+  .card-tag {
+    display: inline-block;
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--jade);
+    background: rgba(16,185,129,0.07);
+    border: 1px solid rgba(16,185,129,0.15);
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #030507;
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px 0;
+  }
+  .code-header {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .code-lang {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .code-copy {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: color 0.15s;
+  }
+  .code-copy:hover { color: var(--jade); }
+  .code-body {
+    padding: 20px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--dim);
+    line-height: 1.9;
+    overflow-x: auto;
+  }
+  .code-body .k { color: #60a5fa; } /* key */
+  .code-body .v { color: var(--jade); } /* value */
+  .code-body .s { color: var(--amber); } /* string */
+  .code-body .c { color: var(--muted); font-style: italic; } /* comment */
+
+  /* REGEX TABLES */
+  .doc-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; }
+  .doc-table th {
+    text-align: left;
+    padding: 10px 16px;
+    border-bottom: 2px solid var(--border2);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .doc-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--dim); vertical-align: top; }
+  .doc-table td:first-child { font-family: var(--mono); color: var(--text); font-size: 12px; }
+  .doc-table tr:last-child td { border: none; }
+  .doc-table tr:hover td { background: rgba(255,255,255,0.01); }
+
+  /* SIGNAL STATES */
+  .signal-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .signal-row.green { background: rgba(16,185,129,0.05); border: 1px solid rgba(16,185,129,0.15); }
+  .signal-row.amber { background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.15); }
+  .signal-row.red { background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.15); }
+  .signal-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+  .signal-dot.green { background: var(--jade); box-shadow: 0 0 8px rgba(16,185,129,0.4); }
+  .signal-dot.amber { background: var(--amber); box-shadow: 0 0 8px rgba(245,158,11,0.4); }
+  .signal-dot.red { background: var(--red); box-shadow: 0 0 8px rgba(239,68,68,0.4); animation: pulse 1.5s infinite; }
+  .signal-label { font-family: var(--mono); font-size: 11px; font-weight: 500; margin-bottom: 4px; }
+  .signal-label.green { color: var(--jade); }
+  .signal-label.amber { color: var(--amber); }
+  .signal-label.red { color: var(--red); }
+  .signal-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* ENDPOINT BLOCK */
+  .endpoint-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .endpoint-top {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .endpoint-top:hover { background: rgba(255,255,255,0.02); }
+  .method-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 5px;
+    background: rgba(16,185,129,0.1);
+    color: var(--jade);
+    border: 1px solid rgba(16,185,129,0.2);
+    flex-shrink: 0;
+  }
+  .endpoint-path { font-family: var(--mono); font-size: 13px; color: white; flex: 1; }
+  .endpoint-desc { font-size: 12px; color: var(--muted); }
+  .endpoint-expand { font-family: var(--mono); font-size: 11px; color: var(--muted); transition: transform 0.2s; }
+  .endpoint-body { padding: 16px 20px; }
+  .endpoint-body.hidden { display: none; }
+
+  /* METRIC BARS */
+  .metric-bar { margin-bottom: 14px; }
+  .metric-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--dim); margin-bottom: 6px; }
+  .metric-meta .val { font-family: var(--mono); color: var(--jade); }
+  .metric-track { background: var(--surface2); border-radius: 4px; height: 6px; overflow: hidden; }
+  .metric-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--jade), #34d399); }
+
+  /* SCROLLSPY ACTIVE */
+  .scrollspy-target { scroll-margin-top: 80px; }
+
+  /* MOBILE */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .content { padding: 32px 24px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .page-title { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-title">KAHIN <span class="jade">Lite</span></div>
+    <div class="brand-version">Technical Documentation v1.1.0-Retail-Bridge</div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Overview</div>
+    <a href="#intro" class="nav-item active"><span class="icon">📋</span> Introduction</a>
+    <a href="#vision" class="nav-item"><span class="icon">🎯</span> Product Vision</a>
+    <a href="#audience" class="nav-item"><span class="icon">👥</span> Target Audience</a>
+    <a href="#principles" class="nav-item"><span class="icon">⚙️</span> Core Principles</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Architecture</div>
+    <a href="#topology" class="nav-item"><span class="icon">🏗️</span> System Topology</a>
+    <a href="#data-isolation" class="nav-item"><span class="icon">🔒</span> Data Isolation</a>
+    <a href="#sanity-gates" class="nav-item"><span class="icon">🔍</span> Sanity Gates</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Functional Requirements</div>
+    <a href="#fr1" class="nav-item"><span class="icon">🌐</span> FR-1: Macro Weather <span class="num">M11+M04</span></a>
+    <a href="#fr2" class="nav-item"><span class="icon">🔬</span> FR-2: Stock Doctor <span class="num">M07</span></a>
+    <a href="#fr3" class="nav-item"><span class="icon">🛡️</span> FR-3: Portfolio Shield <span class="num">M13</span></a>
+    <a href="#fr4" class="nav-item"><span class="icon">🧭</span> FR-4: KAHIN Compass <span class="num">M13</span></a>
+    <a href="#fr5" class="nav-item"><span class="icon">💡</span> FR-5: Smart Money <span class="num">M10+M09</span></a>
+    <a href="#fr6" class="nav-item"><span class="icon">🔐</span> FR-6: Audit Ledger <span class="num">M15</span></a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">API Reference</div>
+    <a href="#api-macro" class="nav-item"><span class="icon">📡</span> /macro-weather</a>
+    <a href="#api-stock" class="nav-item"><span class="icon">📊</span> /stock/{ticker}</a>
+    <a href="#api-baskets" class="nav-item"><span class="icon">🗂️</span> /baskets</a>
+    <a href="#api-smart" class="nav-item"><span class="icon">🎯</span> /smart-money</a>
+    <a href="#api-audit" class="nav-item"><span class="icon">🔐</span> /audit/verify</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Non-Functional</div>
+    <a href="#nfr" class="nav-item"><span class="icon">📐</span> NFR Specifications</a>
+    <a href="#security" class="nav-item"><span class="icon">🛡️</span> Security & Privacy</a>
+    <a href="#aws" class="nav-item"><span class="icon">☁️</span> AWS Infrastructure</a>
+  </div>
+
+  <div class="sidebar-footer">
+    <a href="index.html" class="back-link">← Back to Product Site</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="breadcrumb">
+      <span>KAHIN Lite</span>
+      <span class="sep">/</span>
+      <span>Documentation</span>
+      <span class="sep">/</span>
+      <span>v1.1.0-Retail-Bridge</span>
+    </div>
+    <div class="topbar-right">
+      <div class="status-dot"></div>
+      <span>PRD · Software Requirements Document</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header" id="intro">
+      <div class="doc-category">Software Requirements Document</div>
+      <h1 class="page-title">KAHIN Lite<br>Technical PRD</h1>
+      <p class="page-sub">Complete product requirements, architectural specification, functional module definitions, API contracts, and non-functional requirements for KAHIN Lite — the zero-dependency, local-first retail macro intelligence terminal for Android.</p>
+      <div class="page-meta">
+        <span class="meta-chip jade">v1.1.0-Retail-Bridge</span>
+        <span class="meta-chip">Product: Android Mobile</span>
+        <span class="meta-chip">Architecture: Asymmetric Cloud-to-Edge</span>
+        <span class="meta-chip">Status: AWS Activate Candidate</span>
+        <span class="meta-chip">Endpoints: 5 RESTful</span>
+      </div>
+    </div>
+
+    <!-- SECTION 1: VISION -->
+    <div class="doc-section scrollspy-target" id="vision">
+      <div class="doc-section-header">
+        <div class="section-num">01</div>
+        <div class="section-header-text">
+          <div class="section-tag">Product Vision</div>
+          <div class="section-h">Core Mission & Strategic Objectives</div>
+          <div class="section-sub">Why KAHIN Lite exists and what problem it solves.</div>
+        </div>
+      </div>
+
+      <div class="infobox">
+        <div class="infobox-title">Core Mission Statement</div>
+        <div class="infobox-body">KAHIN Lite is an uncompromisingly <strong>zero-dependency, local-first Android mobile application</strong> designed to democratize institutional-grade quantitative finance. It abstracts highly complex multi-layered macroeconomic indicators, systemic liquidity regimes, thematic supply-chain bottlenecks, and algorithmic portfolio optimizations into an intuitive, frictionless <strong>"Traffic Light" and "Single Score"</strong> consumer-facing terminal.</div>
+      </div>
+
+      <div class="prose">
+        <p>The application strips away the cognitive overload of institutional terminal environments, translating heavy data streams into direct <strong>risk-management guardrails</strong> for the everyday retail user. Where traditional financial platforms assume deep expertise in econometric time-series or microstructural datasets, KAHIN Lite assumes nothing — and delivers everything.</p>
+        <p>The system operates on a fundamental design principle: <strong>Symmetry of Information</strong>. The same GIRM stress signals, dark pool accumulation thresholds, and option gamma wall states that inform institutional desks at major financial institutions should be accessible to a retail user with a single tap on their Android device.</p>
+      </div>
+
+      <div id="audience" class="scrollspy-target" style="margin-top:40px;">
+        <div class="section-tag" style="color:var(--amber);margin-bottom:12px;">TARGET AUDIENCE</div>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-icon">👤</div>
+            <div class="card-title">Primary: Retail Investors</div>
+            <div class="card-body">General consumer investors who require professional-tier capital protection but lack the training or time to decode microstructural datasets, econometric time-series, or look-ahead biased financial media.</div>
+            <span class="card-tag">Mass Market</span>
+          </div>
+          <div class="card">
+            <div class="card-icon">🔍</div>
+            <div class="card-title">Secondary: Informed Enthusiasts</div>
+            <div class="card-body">Self-directed traders who understand basic market concepts and want institutional-grade signal validation without maintaining expensive Bloomberg Terminal subscriptions or proprietary data feeds.</div>
+            <span class="card-tag">Prosumer</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: PRINCIPLES -->
+    <div class="doc-section scrollspy-target" id="principles">
+      <div class="doc-section-header">
+        <div class="section-num">02</div>
+        <div class="section-header-text">
+          <div class="section-tag">Engineering Philosophy</div>
+          <div class="section-h">Four Core Engineering Principles</div>
+          <div class="section-sub">Non-negotiable constraints that govern every architectural decision.</div>
+        </div>
+      </div>
+
+      <ul class="hierarchy">
+        <li>
+          <span class="hierarchy-num">P-1</span>
+          <div>
+            <span class="hier-title">Symmetry of Information</span>
+            Bring institutional risk modeling down to a single-tap mobile interface. No financial literacy should be required to interpret a GREEN / YELLOW / RED signal or a 0–100 quality score.
+          </div>
+        </li>
+        <li>
+          <span class="hierarchy-num">P-2</span>
+          <div>
+            <span class="hier-title">Leak-Proof Time Semantics</span>
+            The mobile client maps historical snapshots using explicit event-time boundaries (<code>event_time</code>, <code>available_at</code>), ensuring that no forward-looking data leak or look-ahead bias can infect user backtests or portfolio trackers. The invariant <code>available_at_cutoff ≤ decision_time</code> is cryptographically enforced at every pipeline stage.
+          </div>
+        </li>
+        <li>
+          <span class="hierarchy-num">P-3</span>
+          <div>
+            <span class="hier-title">Zero-Dependency Core</span>
+            The client app strictly avoids heavy external SDKs, third-party tracking frameworks, or bloated charting analytics packages. This preserves extreme performance, guarantees privacy, and enables operation in resource-constrained environments without feature degradation.
+          </div>
+        </li>
+        <li>
+          <span class="hierarchy-num">P-4</span>
+          <div>
+            <span class="hier-title">Local-First Resilience</span>
+            Total architectural insulation against cellular network dropouts, DNS routing failure, or central server downtime via a persistent local data survival framework. If the cloud is unreachable, the app remains fully operational via Room/SQLite snapshot cache.
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- SECTION 3: ARCHITECTURE -->
+    <div class="doc-section scrollspy-target" id="topology">
+      <div class="doc-section-header">
+        <div class="section-num">03</div>
+        <div class="section-header-text">
+          <div class="section-tag">System Architecture</div>
+          <div class="section-h">Asymmetric Cloud-to-Edge Topology</div>
+          <div class="section-sub">Heavy computations in cloud. Absolute privacy on device. Zero per-user database cost.</div>
+        </div>
+      </div>
+
+      <div class="prose">
+        <p>To scale to millions of active retail units without incurring prohibitive cloud computing bills, KAHIN Lite rejects the traditional microservices layout in favor of an <strong>asymmetric architecture</strong>: heavy computations concentrated in the cloud, absolute privacy executed on the edge.</p>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">Pipeline Flow Diagram</span>
+        </div>
+        <div class="code-body">
+<span class="c"># External Data Sources (Public APIs)</span>
+[FRED API] · [Yahoo Finance] · [SEC Filings] · [Exchange Feeds]
+         │
+         ▼  <span class="c">← Executed Once Daily via Automated Cron</span>
+<span class="v">[Central Cloud Compute Engine — AWS EC2]</span>
+    Runs GIRM Stress Lab, Score Engines & Audit Ledgers
+         │
+         ▼  <span class="c">← Serialized into Highly Compressed Static JSON</span>
+<span class="v">[Cloud API Edge Layer — AWS S3 + CloudFront]</span>
+    Lightweight, Stateless CDN & Proxy Distribution Nodes
+         │
+         ▼  <span class="c">← Single-Burst Compressed Synchronization over TLS</span>
+<span class="v">[Android Client]</span>
+    └─> Local Database (Room/SQLite Cache)
+    └─> On-Device Sanity Validation Gates
+    └─> Isolated UI Rendering Layer
+        </div>
+      </div>
+
+      <div id="data-isolation" class="scrollspy-target" style="margin-top:32px;">
+        <div class="section-tag" style="color:var(--blue);margin-bottom:12px;">SECTION 2.1 — LOCAL DATA ISOLATION & CLIENT PRIVACY MODE</div>
+        <div class="infobox blue">
+          <div class="infobox-title">Zero Data Exhaust Guarantee</div>
+          <div class="infobox-body">User watchlists, personal portfolio asset balances, arithmetically input values, and search history trajectories are strictly bound to the client device's native SQLite database layer. <strong>No user-owned financial data or telemetry is ever uploaded to the central server cluster.</strong> This eliminates data breach vulnerabilities and slashes cloud database infrastructure costs to zero per user.</div>
+        </div>
+      </div>
+
+      <div id="sanity-gates" class="scrollspy-target" style="margin-top:32px;">
+        <div class="section-tag" style="color:var(--amber);margin-bottom:12px;">SECTION 2.2 — CLIENT-SIDE DATA SANITY GATES</div>
+        <div class="prose">
+          <p>Before the local database updates its underlying tables from an incoming API sync burst, it subjects the incoming payload to local structural sanity evaluations — mirroring the server-side M02 quality pipeline:</p>
+        </div>
+        <ul class="hierarchy">
+          <li>
+            <span class="hierarchy-num amber">Gate 1</span>
+            <div>
+              <span class="hier-title">Payload Missing Ratio</span>
+              If more than <strong>30%</strong> of expected data points return missing parameters, the sync batch is rejected entirely and the client forces a fallback to the last valid historical state.
+            </div>
+          </li>
+          <li>
+            <span class="hierarchy-num amber">Gate 2</span>
+            <div>
+              <span class="hier-title">Close Jump Outlier Protection</span>
+              If an asset's price or macro score exhibits an uncorroborated single-day jump exceeding <strong>50%</strong>, the client flags an anomaly warning badge on the UI and logs the record under investigation.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SECTION 4: FUNCTIONAL REQUIREMENTS -->
+    <div class="doc-section scrollspy-target" id="fr1">
+      <div class="doc-section-header">
+        <div class="section-num">04</div>
+        <div class="section-header-text">
+          <div class="section-tag">Functional Requirements · FR-1</div>
+          <div class="section-h">Adaptive Macro Weather Dashboard</div>
+          <div class="section-sub">Integrates M11 Composer authority routing with M04 GIRM stress scoring.</div>
+        </div>
+      </div>
+
+      <div class="prose">
+        <p>Upon application launch, the networking module executes a handshake with the edge configuration gateway to process the prevailing global macro systemic risk state calculated by KAHIN's <strong>authority routing hierarchy</strong> — a strict three-tier override system that governs the entire app state.</p>
+      </div>
+
+      <div style="margin: 24px 0;">
+        <div class="section-tag" style="color:var(--jade);margin-bottom:16px;">AUTHORITY ROUTING HIERARCHY</div>
+        <ul class="hierarchy">
+          <li>
+            <span class="hierarchy-num red">Tier 1 — GIRM</span>
+            <div>
+              <span class="hier-title">Highest Authority — Emergency Override</span>
+              If Financing, Demand, Geopolitical, or AI Capex stress scores cross institutional limits (<code>GIRM ≥ 4.0</code>), the app overrides all local settings and triggers a hard system alert regardless of any other indicator state.
+            </div>
+          </li>
+          <li>
+            <span class="hierarchy-num amber">Tier 2 — Sentinel</span>
+            <div>
+              <span class="hier-title">Second Authority — Conservative Override</span>
+              Restricts all technical trend tools and forces conservative warning states if liquidity thresholds drop (<code>Sentinel ≤ 45</code>).
+            </div>
+          </li>
+          <li>
+            <span class="hierarchy-num">Tier 3 — Regime</span>
+            <div>
+              <span class="hier-title">Third Authority — Watchlist Mode</span>
+              Places the terminal into mandatory watchlist mode if macro contradictions expand (<code>Regime &lt; 45</code>), blocking new position signals.
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div style="margin: 24px 0;">
+        <div class="section-tag" style="color:var(--jade);margin-bottom:16px;">UI STATE CONFIGURATIONS</div>
+        <div class="signal-row green">
+          <div class="signal-dot green"></div>
+          <div>
+            <div class="signal-label green">GREEN — Constructive / Neutral Regime</div>
+            <div class="signal-desc">Liquidity expanding, low systemic friction. Interface utilizes deep slate/charcoal tones with sharp jade accents. All modules unrestricted. Capital deployment signals: CONSTRUCTIVE or NEUTRAL.</div>
+          </div>
+        </div>
+        <div class="signal-row amber">
+          <div class="signal-dot amber"></div>
+          <div>
+            <div class="signal-label amber">YELLOW — Risk-Reduced / Watchlist-Only Regime</div>
+            <div class="signal-desc">Liquidity deceleration or macro contradiction flagged. Interface displays amber alert indicators warning users to optimize cash positions. Speculative theme access visually restricted.</div>
+          </div>
+        </div>
+        <div class="signal-row red">
+          <div class="signal-dot red"></div>
+          <div>
+            <div class="signal-label red">RED — GIRM Emergency Brake Engaged</div>
+            <div class="signal-desc">Systemic financial or geopolitical stress crosses critical limits. Entire viewport adopts high-contrast crimson theme. Defensive allocation model forces 65% safe haven, 25% Iron Dome, 10% max speculative.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="infobox amber">
+        <div class="infobox-title">Vernacular Masking Protocol</div>
+        <div class="infobox-body">The system intercepts complex structural indicators — such as TED spreads, Money Market Fund dynamics, or Reverse Repo drains — and maps them into <strong>clear, actionable, non-academic plain-language panels</strong>. No financial jargon reaches the retail user.</div>
+      </div>
+    </div>
+
+    <!-- FR-2 -->
+    <div class="doc-section scrollspy-target" id="fr2">
+      <div class="doc-section-header">
+        <div class="section-num" style="color:rgba(59,130,246,0.1);">05</div>
+        <div class="section-header-text">
+          <div class="section-tag">Functional Requirements · FR-2</div>
+          <div class="section-h">Stock Doctor & Algorithmic Quality Scoring</div>
+          <div class="section-sub">Integrates M07 Stock Scoring Engine with 7 financial metrics.</div>
+        </div>
+      </div>
+
+      <div class="prose">
+        <p>Provides an instantaneous, single-tap lookup console that processes international or local equity identifiers. The system condenses complex balance sheet analysis into a <strong>unified integer score from 0 to 100</strong>, accompanied by exactly three human-readable explainable audit drivers.</p>
+      </div>
+
+      <div style="margin: 24px 0;">
+        <div class="section-tag" style="color:var(--blue);margin-bottom:16px;">SCORING METRICS — 7 FACTORS</div>
+        <div class="metric-bar"><div class="metric-meta"><span>Current Ratio — Liquidity Coverage</span><span class="val">Weight: High</span></div><div class="metric-track"><div class="metric-fill" style="width:90%"></div></div></div>
+        <div class="metric-bar"><div class="metric-meta"><span>Debt-to-Equity — Capital Structure</span><span class="val">Weight: High</span></div><div class="metric-track"><div class="metric-fill" style="width:85%"></div></div></div>
+        <div class="metric-bar"><div class="metric-meta"><span>Gross Margin — Pricing Power</span><span class="val">Weight: Medium</span></div><div class="metric-track"><div class="metric-fill" style="width:75%"></div></div></div>
+        <div class="metric-bar"><div class="metric-meta"><span>Operating Margin — Core Efficiency</span><span class="val">Weight: Medium</span></div><div class="metric-track"><div class="metric-fill" style="width:70%"></div></div></div>
+        <div class="metric-bar"><div class="metric-meta"><span>Net Margin — Bottom Line</span><span class="val">Weight: Medium</span></div><div class="metric-track"><div class="metric-fill" style="width:65%"></div></div></div>
+        <div class="metric-bar"><div class="metric-meta"><span>FCF Margin — Cash Conversion</span><span class="val">Weight: High</span></div><div class="metric-track"><div class="metric-fill" style="width:88%"></div></div></div>
+        <div class="metric-bar"><div class="metric-meta"><span>Price Momentum — Technical Signal</span><span class="val">Weight: Low</span></div><div class="metric-track"><div class="metric-fill" style="width:50%"></div></div></div>
+      </div>
+
+      <div class="infobox">
+        <div class="infobox-title">Explainable Audit Drivers</div>
+        <div class="infobox-body">The UI surfaces precisely <strong>three human-readable bullet items</strong> indicating why the asset received its score, extracted directly from the underlying evaluation engine's top-4 scoring <code>AuditDriver</code> factors. The user always knows the "why" behind the number.</div>
+      </div>
+
+      <div class="infobox red">
+        <div class="infobox-title">Balance Sheet Manipulation Radar</div>
+        <div class="infobox-body">An explicit warning badge is projected if the data sanity pipeline flags anomalous trends — such as sudden debt maturity walls, artificial earnings manipulation metrics, or uncorroborated close price jumps exceeding threshold levels.</div>
+      </div>
+    </div>
+
+    <!-- FR-3, FR-4, FR-5, FR-6 condensed -->
+    <div class="doc-section scrollspy-target" id="fr3">
+      <div class="doc-section-header">
+        <div class="section-num" style="color:rgba(167,139,250,0.1);">06</div>
+        <div class="section-header-text">
+          <div class="section-tag">Functional Requirements · FR-3 → FR-6</div>
+          <div class="section-h">Portfolio Shield, Compass, Smart Money & Audit</div>
+          <div class="section-sub">Four additional intelligence modules completing the KAHIN Lite terminal.</div>
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <div class="card" id="fr3-card" style="border-color:rgba(167,139,250,0.15);">
+          <div class="card-icon">🛡️</div>
+          <div class="card-title">FR-3 — Portfolio Shield</div>
+          <div class="card-body">User portfolio weights stored in local SQLite. Optimized defensive allocation projected alongside current configuration. Under RED regime, <code>guard_multiplier</code> contracts speculative growth allocations by up to 60% — expanding capital preservation modules proportionally. Real-time visual reallocation guides.</div>
+          <span class="card-tag">Iron Dome Integration (M13)</span>
+        </div>
+        <div class="card" id="fr4" style="border-color:rgba(16,185,129,0.15);">
+          <div class="card-icon">🧭</div>
+          <div class="card-title">FR-4 — KAHIN Compass</div>
+          <div class="card-body">Curated thematic supply-chain cluster discovery matrix. Predefined baskets: <strong>Iron Dome Defensives</strong>, <strong>AI Bottleneck Infrastructure Leaders</strong>, and <strong>Commodity / Energy Shields</strong>. Macro-gated access control blocks speculative themes during RED alert states with protective advisory overlays.</div>
+          <span class="card-tag">Thematic Rotation (M13+)</span>
+        </div>
+        <div class="card" id="fr5" style="border-color:rgba(59,130,246,0.15);">
+          <div class="card-icon">💡</div>
+          <div class="card-title">FR-5 — Smart Money Pulse</div>
+          <div class="card-body">Synthesizes dark pool accumulation signals (DIX &gt;45% active threshold), options gamma wall states (negative acceleration vs. positive pinning via dealer GEX), and unstructured news bulletin sentiment flows into a unified Market Pulse visual tracker. Additional API interface.</div>
+          <span class="card-tag">M10 + M09 Integration</span>
+        </div>
+        <div class="card" id="fr6" style="border-color:rgba(245,158,11,0.15);">
+          <div class="card-icon">🔐</div>
+          <div class="card-title">FR-6 — Audit Attestation</div>
+          <div class="card-body">One-tap cryptographic proof verification per asset profile. SHA256 block signature confirms: score logged at market session close, no retrospective alteration possible, <code>available_at_cutoff ≤ decision_time</code> invariant enforced. Provides retail trust signal at zero effort. Additional API interface.</div>
+          <span class="card-tag">SHA256 Ledger (M15)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- API REFERENCE -->
+    <div class="doc-section scrollspy-target" id="api-macro">
+      <div class="doc-section-header">
+        <div class="section-num" style="color:rgba(16,185,129,0.08);">07</div>
+        <div class="section-header-text">
+          <div class="section-tag">API Specification</div>
+          <div class="section-h">RESTful Endpoint Contracts</div>
+          <div class="section-sub">Five stateless endpoints. All responses served from CloudFront edge nodes. Sub-250KB daily payload.</div>
+        </div>
+      </div>
+
+      <!-- EP1 -->
+      <div class="endpoint-block">
+        <div class="endpoint-top" onclick="toggle(this)">
+          <span class="method-tag">GET</span>
+          <span class="endpoint-path">/api/v1/retail/macro-weather</span>
+          <span class="endpoint-expand">▼</span>
+        </div>
+        <div class="endpoint-body">
+          <p class="endpoint-desc" style="margin-bottom:14px;">Returns current GIRM composite score, active regime state, authority routing trace, and optimized defensive allocation model. Called on every app launch — the primary synchronization endpoint.</p>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">JSON Response</span></div>
+            <div class="code-body">
+{
+  <span class="k">"sync_timestamp_utc"</span>: <span class="s">"2026-06-03T14:30:00Z"</span>,
+  <span class="k">"macro_regime"</span>: <span class="s">"CRITICAL_STRESS"</span>,
+  <span class="k">"girm_composite_score"</span>: <span class="v">4.2</span>,
+  <span class="k">"authority_trace"</span>: <span class="s">"GIRM_OVERRIDE → avoid_new_position"</span>,
+  <span class="k">"ui_state"</span>: <span class="s">"RED"</span>,
+  <span class="k">"defensive_allocation"</span>: {
+    <span class="k">"safe_haven_pct"</span>: <span class="v">65</span>,
+    <span class="k">"iron_dome_pct"</span>: <span class="v">25</span>,
+    <span class="k">"speculative_pct"</span>: <span class="v">10</span>
+  },
+  <span class="k">"vernacular_alert"</span>: <span class="s">"Finansman stres seviyeleri kritik eşiği aştı."</span>
+}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP2 -->
+      <div class="endpoint-block" id="api-stock">
+        <div class="endpoint-top" onclick="toggle(this)">
+          <span class="method-tag">GET</span>
+          <span class="endpoint-path">/api/v1/retail/stock/{ticker}</span>
+          <span class="endpoint-expand">▼</span>
+        </div>
+        <div class="endpoint-body hidden">
+          <p class="endpoint-desc" style="margin-bottom:14px;">Returns composite quality score (0–100), three explainable audit driver strings, fraud/anomaly warning, and cryptographic attestation block index for any equity identifier.</p>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">JSON Response — GET /api/v1/retail/stock/ASELS</span></div>
+            <div class="code-body">
+{
+  <span class="k">"ticker"</span>: <span class="s">"ASELS"</span>,
+  <span class="k">"composite_quality_score"</span>: <span class="v">88</span>,
+  <span class="k">"classification"</span>: <span class="s">"Defensive Citadel"</span>,
+  <span class="k">"audit_drivers"</span>: [
+    <span class="s">"Nakit karşılama oranları güçlü seviyede."</span>,
+    <span class="s">"Brüt kârlılık marjları istikrarlı seyrediyor."</span>,
+    <span class="s">"Uzun vadeli sipariş defteri nakit akışını güvence altına alıyor."</span>
+  ],
+  <span class="k">"fraud_warning"</span>: <span class="s">"TEMİZ / ANOMALİ TESPİT EDİLMEDİ"</span>,
+  <span class="k">"cryptographic_attestation"</span>: {
+    <span class="k">"ledger_block_index"</span>: <span class="v">48291</span>,
+    <span class="k">"sha256_signature"</span>: <span class="s">"7f83b2a91c02...abcde5f6"</span>
+  }
+}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP3 -->
+      <div class="endpoint-block" id="api-baskets">
+        <div class="endpoint-top" onclick="toggle(this)">
+          <span class="method-tag">GET</span>
+          <span class="endpoint-path">/api/v1/retail/baskets</span>
+          <span class="endpoint-expand">▼</span>
+        </div>
+        <div class="endpoint-body hidden">
+          <p class="endpoint-desc" style="margin-bottom:14px;">Returns the full thematic cluster discovery matrix with macro-gated access status per basket based on current regime state.</p>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">JSON Response</span></div>
+            <div class="code-body">
+{
+  <span class="k">"total_active_baskets"</span>: <span class="v">2</span>,
+  <span class="k">"macro_regime_context"</span>: <span class="s">"CRITICAL_STRESS"</span>,
+  <span class="k">"baskets"</span>: [
+    {
+      <span class="k">"basket_id"</span>: <span class="s">"iron-dome-defensive"</span>,
+      <span class="k">"name"</span>: <span class="s">"Demir Kubbe Defansif Varlıklar"</span>,
+      <span class="k">"risk_profile"</span>: <span class="s">"LOW"</span>,
+      <span class="k">"ui_badge"</span>: <span class="s">"KAHIN EN UYGUN SEÇİM"</span>,
+      <span class="k">"top_constituents"</span>: [<span class="s">"ASML"</span>, <span class="s">"TSMC"</span>, <span class="s">"HWM"</span>],
+      <span class="k">"status"</span>: <span class="s">"ACTIVE"</span>
+    },
+    {
+      <span class="k">"basket_id"</span>: <span class="s">"k-tech-bottleneck"</span>,
+      <span class="k">"name"</span>: <span class="s">"Yapay Zeka Darboğaz Öncüleri"</span>,
+      <span class="k">"risk_profile"</span>: <span class="s">"HIGH"</span>,
+      <span class="k">"ui_badge"</span>: <span class="s">"MAKRO REJİM KISITLAMASI"</span>,
+      <span class="k">"status"</span>: <span class="s">"RESTRICTED"</span>
+    }
+  ]
+}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP4 -->
+      <div class="endpoint-block" id="api-smart">
+        <div class="endpoint-top" onclick="toggle(this)">
+          <span class="method-tag">GET</span>
+          <span class="endpoint-path">/api/v1/retail/smart-money</span>
+          <span class="endpoint-expand">▼</span>
+        </div>
+        <div class="endpoint-body hidden">
+          <p class="endpoint-desc" style="margin-bottom:14px;">Synthesized institutional signal stream — dark pool DIX status, options gamma regime, and news bulletin sentiment vector. Additional API interface.</p>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">JSON Response</span></div>
+            <div class="code-body">
+{
+  <span class="k">"dark_pool_indicators"</span>: {
+    <span class="k">"status"</span>: <span class="s">"ACTIVE_ACCUMULATION"</span>,
+    <span class="k">"dix_reading_percentage"</span>: <span class="v">46.5</span>,
+    <span class="k">"context_summary"</span>: <span class="s">"Kurumsal blok alım eğilimi sürüyor."</span>
+  },
+  <span class="k">"options_gamma_profile"</span>: {
+    <span class="k">"gamma_regime"</span>: <span class="s">"POSITIVE_GAMMA_PINNING"</span>,
+    <span class="k">"gex_status"</span>: <span class="s">"STABLE"</span>
+  },
+  <span class="k">"bulletin_sentiment_node"</span>: {
+    <span class="k">"primary_narrative_focus"</span>: <span class="s">"STICKY_INFLATION_VS_GROWTH"</span>,
+    <span class="k">"sentiment_direction"</span>: <span class="s">"NEUTRAL_DEFENSIVE"</span>,
+    <span class="k">"core_flags"</span>: [<span class="s">"FED_BALANCE_SHEET_CONTRACTION"</span>, <span class="s">"COMMODITY_PRESSURE"</span>]
+  }
+}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EP5 -->
+      <div class="endpoint-block" id="api-audit">
+        <div class="endpoint-top" onclick="toggle(this)">
+          <span class="method-tag">GET</span>
+          <span class="endpoint-path">/api/v1/retail/audit/verify/{block_index}</span>
+          <span class="endpoint-expand">▼</span>
+        </div>
+        <div class="endpoint-body hidden">
+          <p class="endpoint-desc" style="margin-bottom:14px;">Queries the cryptographic proof engine to verify SHA256 block signature and look-ahead bias clearance flag. Additional API interface.</p>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">JSON Response</span></div>
+            <div class="code-body">
+{
+  <span class="k">"verified_block_index"</span>: <span class="v">48291</span>,
+  <span class="k">"decision_time_cutoff_utc"</span>: <span class="s">"2026-06-02T21:00:00Z"</span>,
+  <span class="k">"verification_status"</span>: <span class="s">"VERIFIED_MATURED_PROVEN"</span>,
+  <span class="k">"sha256_payload_hash"</span>: <span class="s">"a1b2c3d4e5f6...a1b2c3d4e5f6"</span>,
+  <span class="k">"look_ahead_bias_clearance_flag"</span>: <span class="v">true</span>,
+  <span class="k">"audit_proof_statement"</span>: <span class="s">"Bu veri setinin hesaplanmasında
+    gelecek zaman dilimlerine ait hiçbir fiyat verisi sızdırılmamış,
+    geçmişe dönük veri manipülasyonu yapılmadığı şifreleme
+    yöntemleriyle doğrulanmıştır."</span>
+}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NFR -->
+    <div class="doc-section scrollspy-target" id="nfr">
+      <div class="doc-section-header">
+        <div class="section-num" style="color:rgba(167,139,250,0.08);">08</div>
+        <div class="section-header-text">
+          <div class="section-tag">Non-Functional Requirements</div>
+          <div class="section-h">Resilience, Security & Performance</div>
+          <div class="section-sub">Engineering constraints governing runtime behavior at scale.</div>
+        </div>
+      </div>
+
+      <table class="doc-table" id="security">
+        <thead>
+          <tr><th>NFR ID</th><th>Category</th><th>Requirement</th><th>Target</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>NFR-01</td><td>Resilience</td><td>Graceful degradation on network failure — auto-load last valid Room DB cache. Display SNAPSHOT FALLBACK MODE banner.</td><td>Zero white screens</td></tr>
+          <tr><td>NFR-02</td><td>Privacy</td><td>Zero user financial data transmitted to cloud. All portfolio/watchlist data confined to device SQLite.</td><td>0 bytes user data</td></tr>
+          <tr><td>NFR-03</td><td>Performance</td><td>Daily API sync payload compressed via binary serialization before transmission.</td><td>&lt;250KB/sync</td></tr>
+          <tr><td>NFR-04</td><td>Security</td><td>On-device SQLite tables with sensitive watchlist data encrypted via native Android hardware storage verification contexts.</td><td>Hardware-backed</td></tr>
+          <tr><td>NFR-05</td><td>Data Quality</td><td>Client-side sanity gates: payload missing ratio &lt;30%, jump outlier threshold 50%. Reject and fallback on fail.</td><td>Mirrors M02</td></tr>
+          <tr><td>NFR-06</td><td>Audit</td><td>Look-ahead bias invariant enforced: <code>available_at_cutoff ≤ decision_time</code> verified cryptographically on every scoring cycle.</td><td>SHA256 enforced</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- AWS -->
+    <div class="doc-section scrollspy-target" id="aws">
+      <div class="doc-section-header">
+        <div class="section-num" style="color:rgba(245,158,11,0.07);">09</div>
+        <div class="section-header-text">
+          <div class="section-tag">AWS Infrastructure</div>
+          <div class="section-h">12-Month Financial & Infrastructure Strategy</div>
+          <div class="section-sub">$100 AWS Activate credit structured as a 12-month strategic runway.</div>
+        </div>
+      </div>
+
+      <div class="infobox">
+        <div class="infobox-title">Asymmetric Cloud-to-Edge Design Rationale</div>
+        <div class="infobox-body">By serving analytical conclusions as static JSON via CloudFront CDN rather than dynamic database queries, KAHIN Lite scales to <strong>millions of active users at a flat per-user cloud cost of zero</strong>. The only variable cost is the once-daily EC2 ingestion cycle — covered by Free Tier.</div>
+      </div>
+
+      <table class="doc-table" style="margin-bottom:28px;">
+        <thead>
+          <tr><th>AWS Service</th><th>Utilization Model</th><th>Role in Architecture</th><th>Est. Monthly</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>EC2 t3.micro</td><td>Free Tier — 750h/month</td><td>Ingestion engine + GIRM scoring cron</td><td>$0.00</td></tr>
+          <tr><td>Amazon S3</td><td>Static payload storage</td><td>Immutable JSON analytical conclusions</td><td>~$0.10</td></tr>
+          <tr><td>Amazon CloudFront</td><td>Global CDN distribution</td><td>Edge delivery — eliminates DB read costs</td><td>~$0.20</td></tr>
+          <tr><td>AWS Lambda</td><td>Auto-shutdown triggers</td><td>Stop EC2 outside peak ingestion hours</td><td>$0.00*</td></tr>
+          <tr><td>AWS Budgets</td><td>Cost monitoring</td><td>Email alert at $8.00 threshold</td><td>$0.00</td></tr>
+          <tr><td>Ops Buffer</td><td>Spike contingency</td><td>Unexpected usage headroom</td><td>~$8.03</td></tr>
+          <tr><td><strong>Total Monthly</strong></td><td></td><td></td><td><strong>~$8.33</strong></td></tr>
+        </tbody>
+      </table>
+
+      <div class="infobox blue">
+        <div class="infobox-title">Budget Management Best Practices</div>
+        <div class="infobox-body">
+          <strong>1. Budget Alerts:</strong> AWS Budgets configured to trigger email at $8.00/month. <br>
+          <strong>2. Resource Lifecycle:</strong> Monthly audit of unused volumes and snapshots to prevent silent billing creep. <br>
+          <strong>3. Database Strategy:</strong> RDS avoided entirely for MVP. Client-side Room DB offloads all query cost. <br>
+          <strong>4. Auto-Shutdown:</strong> Lambda functions stop EC2 outside peak ingestion windows automatically.
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div style="border-top:1px solid var(--border);padding-top:40px;margin-top:40px;text-align:center;">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:8px;">KAHIN Lite — Software Requirements Document v1.1.0-Retail-Bridge</div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--border2);">© 2026 KAHIN Lite — Sovereign Retail Capital Protection Infrastructure</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function toggle(el) {
+    const body = el.nextElementSibling;
+    const arrow = el.querySelector('.endpoint-expand');
+    if (body.classList.contains('hidden')) {
+      body.classList.remove('hidden');
+      arrow.textContent = '▲';
+    } else {
+      body.classList.add('hidden');
+      arrow.textContent = '▼';
+    }
+  }
+
+  // Open first endpoint by default
+  document.querySelector('.endpoint-top').click();
+
+  // Scrollspy
+  const navItems = document.querySelectorAll('.nav-item');
+  const sections = document.querySelectorAll('.scrollspy-target, .doc-section');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navItems.forEach(item => item.classList.remove('active'));
+        const id = entry.target.id;
+        const active = document.querySelector(`.nav-item[href="#${id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('[id]').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
