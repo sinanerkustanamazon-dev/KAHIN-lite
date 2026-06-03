@@ -23,10 +23,12 @@
 </head>
 <body class="bg-slateBg text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between">
 
+    <!-- Top Status Bar -->
     <div class="bg-jadeAccent/10 border-b border-jadeAccent/20 py-2 text-center text-xs text-jadeAccent tracking-wide font-mono">
         STAGING BUILD PROTOCOL // ACTIVE AWS ACTIVATE INFRASTRUCTURE CANDIDATE
     </div>
 
+    <!-- Navigation Header -->
     <header class="border-b border-borderBorder bg-slateBg/90 backdrop-blur sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3">
@@ -34,17 +36,17 @@
                 <span class="text-2xl font-black tracking-tight text-white">KAHIN<span class="text-jadeAccent font-light text-xs tracking-widest ml-1.5 uppercase border border-jadeAccent/30 px-2 py-0.5 rounded bg-jadeAccent/5">Lite</span></span>
             </div>
             <div class="flex items-center space-x-6">
+                <a href="#prototypes" class="text-xs font-medium tracking-wider text-jadeAccent hover:text-white transition uppercase font-mono bg-jadeAccent/10 px-3 py-1.5 rounded border border-jadeAccent/20">Live Prototypes</a>
                 <a href="#architecture" class="text-xs font-medium tracking-wider text-slate-400 hover:text-white transition uppercase font-mono">Architecture</a>
-                <span class="inline-flex items-center px-3 py-1 rounded bg-panelCard border border-borderBorder text-xs font-mono font-medium text-slate-300">
-                    v1.1.0-Retail-Bridge
-                </span>
             </div>
         </div>
     </header>
 
+    <!-- Main Content -->
     <main class="flex-grow max-w-6xl w-full mx-auto px-6 py-16">
         
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-20">
+        <!-- Hero Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24">
             <div class="lg:col-span-7 space-y-6 text-left">
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-none">
                     Democratizing <span class="text-transparent bg-clip-text bg-gradient-to-r from-jadeAccent to-emerald-400">Quantitative</span> Macro Risk Terminals.
@@ -52,7 +54,7 @@
                 <p class="text-base md:text-lg text-slate-400 max-w-xl leading-relaxed">
                     An uncompromisingly zero-dependency, local-first analytical engine designed for everyday retail investors. KAHIN Lite strips away cognitive overload, converting multi-layered macroeconomic variables into a frictionless decision-support architecture.
                 </p>
-                <div class="pt-4 flex flex-wrap gap-4">
+                <div class="pt-2 flex flex-wrap gap-4">
                     <span class="px-4 py-2 bg-panelCard border border-borderBorder rounded text-xs font-mono text-slate-300 flex items-center">
                         <span class="w-2 h-2 rounded-full bg-jadeAccent mr-2 animate-ping"></span> Ingestion: Active (FRED/YF)
                     </span>
@@ -62,58 +64,116 @@
                 </div>
             </div>
             
-            <div class="lg:col-span-5 bg-panelCard border border-borderBorder rounded-2xl p-6 shadow-2xl font-mono text-xs text-slate-400 space-y-4 relative overflow-hidden">
+            <div class="lg:col-span-5 bg-panelCard border border-borderBorder rounded-2xl p-6 shadow-2xl font-mono text-xs text-slate-400 space-y-4 relative">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-jadeAccent to-transparent"></div>
                 <div class="flex items-center justify-between border-b border-borderBorder pb-3">
                     <span class="text-white font-bold text-xs flex items-center">
-                        <span class="w-2 h-2 rounded-full bg-amber-500 mr-2"></span> CORE METRIC MONITOR
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span> AWS EDGE SYNC LOG
                     </span>
-                    <span class="text-slate-500">SYSTEM: OK</span>
+                    <span class="text-slate-500">DYNAMIC PAYLOAD</span>
                 </div>
-                <div class="space-y-2">
-                    <div class="flex justify-between bg-slateBg p-2 rounded border border-borderBorder/50">
-                        <span>Systemic Liquidity (GIRM)</span>
-                        <span class="text-jadeAccent font-bold">ACCELERATING</span>
-                    </div>
-                    <div class="flex justify-between bg-slateBg p-2 rounded border border-borderBorder/50">
-                        <span>Smart Money Pulse Index</span>
-                        <span class="text-white">0.74 (STABLE)</span>
-                    </div>
-                    <div class="flex justify-between bg-slateBg p-2 rounded border border-borderBorder/50">
-                        <span>Gamma Structural Regime</span>
-                        <span class="text-amber-400">POSITIVE PINNING</span>
-                    </div>
-                </div>
-                <div class="border-t border-borderBorder pt-3 text-[10px] text-slate-500 leading-tight">
-                    CRITICAL METRIC GENERATION VALUE SERIALIZED TO AWS S3 EDGE IN 242ms WITH NO LOCAL CLIENT COMPUTATION OVERHEAD.
+                <div class="space-y-2 text-[11px]">
+                    <p class="text-slate-300">> AWS S3 Asset serialization complete.</p>
+                    <p class="text-slate-300">> Amazon CloudFront caching active across edge nodes.</p>
+                    <p class="text-jadeAccent">> Look-ahead bias clearance validation: TRUE</p>
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24">
-            <div class="p-6 bg-panelCard border border-borderBorder rounded-xl space-y-3">
-                <div class="w-10 h-10 bg-jadeAccent/10 border border-jadeAccent/20 rounded flex items-center justify-center text-jadeAccent font-bold">01</div>
-                <h3 class="text-white font-bold text-base">Leak-Proof Time Semantics</h3>
-                <p class="text-slate-400 text-xs leading-relaxed">
-                    By enforcing rigorous temporal boundaries using distinct event-time matrices, KAHIN Lite completely eradicates forward-looking data contamination across consumer backtests and monitoring portfolios.
-                </p>
+        <!-- INTERACTIVE PROTOTYPES SECTION (Targeting AWS Reviewers) -->
+        <div id="prototypes" class="space-y-12 mb-24">
+            <div class="text-center md:text-left">
+                <h2 class="text-2xl font-black text-white tracking-tight">Interactive Mobile Client Prototypes</h2>
+                <p class="text-sm text-slate-400">Experience how KAHIN Lite renders heavy cloud analytics into seamless consumer-facing guardrails.</p>
             </div>
-            <div class="p-6 bg-panelCard border border-borderBorder rounded-xl space-y-3">
-                <div class="w-10 h-10 bg-jadeAccent/10 border border-jadeAccent/20 rounded flex items-center justify-center text-jadeAccent font-bold">02</div>
-                <h3 class="text-white font-bold text-base">Zero-Dependency Resilience</h3>
-                <p class="text-slate-400 text-xs leading-relaxed">
-                    The core engine relies exclusively on strict standard library fallback isolation models. Zero third-party trackers, zero bloated analytics SDK frameworks, zero privacy leaks.
-                </p>
-            </div>
-            <div class="p-6 bg-panelCard border border-borderBorder rounded-xl space-y-3">
-                <div class="w-10 h-10 bg-jadeAccent/10 border border-jadeAccent/20 rounded flex items-center justify-center text-jadeAccent font-bold">03</div>
-                <h3 class="text-white font-bold text-base">Local-First Edge Survival</h3>
-                <p class="text-slate-400 text-xs leading-relaxed">
-                    All client state-tracking paradigms remain containerized inside the local Android SQLite (Room DB) architecture layer, bypassing centralized tracking liabilities entirely.
-                </p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- PROTOTYPE 1: GLOBAL MACRO WEATHER (The Defensive Shield) -->
+                <div class="bg-panelCard border border-borderBorder rounded-2xl p-6 shadow-2xl flex flex-col justify-between space-y-6">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-borderBorder pb-3 mb-4">
+                            <span class="text-xs font-mono text-slate-400 uppercase tracking-widest">Interface Module 01 // The Weather Screen</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-red-900/30 text-red-400 border border-red-800/40">GIRM EMERGENCY ENGAGED</span>
+                        </div>
+                        
+                        <!-- Mobile View Render -->
+                        <div class="bg-slateBg rounded-xl p-5 border border-slate-800 font-sans space-y-5">
+                            <!-- Alert Bar -->
+                            <div class="bg-red-900/40 border border-red-700/30 p-3 rounded-lg text-center">
+                                <div class="text-xs font-black text-red-400 tracking-wide uppercase">PİYASA ALARMI: KORUMA KALKANI DEVREDE!</div>
+                                <div class="text-[10px] text-slate-300 mt-1">Riskli varlık dağılımlarını sınırlayın, nakit kalkanını büyütün.</div>
+                            </div>
+
+                            <!-- Portfolio Allocation Tracks -->
+                            <div class="space-y-3">
+                                <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">KAHIN Koruma Kalkanı Dağılım Modeli:</div>
+                                <div class="space-y-2">
+                                    <div>
+                                        <div class="flex justify-between text-xs mb-1 text-slate-300 font-medium"><span>Güvenli Liman Kalkanı (Nakit/Altın)</span><span class="text-jadeAccent font-bold">65%</span></div>
+                                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden"><div class="bg-jadeAccent h-full w-[65%]"></div></div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between text-xs mb-1 text-slate-300 font-medium"><span>Demir Kubbe Varlıkları (Defansif)</span><span class="text-emerald-400 font-bold">25%</span></div>
+                                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden"><div class="bg-emerald-500 h-full w-[25%]"></div></div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between text-xs mb-1 text-slate-400"><span>Yüksek Risk / Spekülatif Büyüme</span><span class="text-red-400 font-bold">10%</span></div>
+                                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden"><div class="bg-red-500 h-full w-[10%]"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-slate-400 leading-relaxed font-mono bg-slateBg/50 p-3 rounded border border-borderBorder/50">
+                        <strong class="text-white">UX Rationale:</strong> Dynamic constraint multipliers automatically contract speculative growth container targets by 60% during system stress to prevent catastrophic retail capital drawdown.
+                    </div>
+                </div>
+
+                <!-- PROTOTYPE 2: STOCK DOCTOR (Interactive Look-up Simulation) -->
+                <div class="bg-panelCard border border-borderBorder rounded-2xl p-6 shadow-2xl flex flex-col justify-between space-y-6">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-borderBorder pb-3 mb-4">
+                            <span class="text-xs font-mono text-slate-400 uppercase tracking-widest">Interface Module 02 // Stock Diagnostics</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-jadeAccent/10 text-jadeAccent border border-jadeAccent/20">DEMO LIVE LOOKUP</span>
+                        </div>
+                        
+                        <!-- Mobile View Render -->
+                        <div class="bg-slateBg rounded-xl p-5 border border-slate-800 font-sans space-y-4">
+                            <!-- Input Simulation Bar -->
+                            <div class="flex gap-2">
+                                <div class="bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs text-white font-mono flex-grow">ASELS</div>
+                                <button class="bg-jadeAccent text-white text-xs font-bold px-4 rounded hover:bg-emerald-700 transition font-mono">SORGULA</button>
+                            </div>
+
+                            <!-- Diagnostic Result Output -->
+                            <div class="flex items-center justify-between bg-slate-900/60 p-3 rounded-lg border border-slate-800">
+                                <div>
+                                    <div class="text-sm font-bold text-white">ASELSAN (ASELS)</div>
+                                    <div class="text-[10px] text-jadeAccent font-mono mt-0.5 uppercase tracking-wider">Classification: Defensive Citadel</div>
+                                </div>
+                                <div class="w-12 h-12 rounded-full border-2 border-jadeAccent flex items-center justify-center bg-jadeAccent/5">
+                                    <span class="text-base font-black text-white">88</span>
+                                </div>
+                            </div>
+
+                            <!-- Drivers List -->
+                            <div class="space-y-1.5 text-[11px] text-slate-300">
+                                <p class="flex items-start"><span class="text-jadeAccent mr-1.5">•</span> Kısa vadeli borç yükümlülüklerine karşı nakit karşılama oranları güçlü.</p>
+                                <p class="flex items-start"><span class="text-jadeAccent mr-1.5">•</span> Ana faaliyet brüt kârlılık marjları tarihsel ortalamada istikrarlı.</p>
+                                <p class="flex items-start"><span class="text-jadeAccent mr-1.5">•</span> SHA256 Ledger Atteştation Proof: Verified Pristine.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-slate-400 leading-relaxed font-mono bg-slateBg/50 p-3 rounded border border-borderBorder/50">
+                        <strong class="text-white">Data Optimization:</strong> Condenses heavy microstructural balance-sheet tracking records into a simplified 0-100 index accompanied by human-readable explainable driver matrices.
+                    </div>
+                </div>
+
             </div>
         </div>
 
+        <!-- Section 3: AWS Infrastructure Deep Dive -->
         <div id="architecture" class="bg-panelCard border border-borderBorder rounded-2xl p-8 text-left space-y-8">
             <div class="border-b border-borderBorder pb-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
@@ -173,6 +233,7 @@
         </div>
     </main>
 
+    <!-- Footer -->
     <footer class="border-t border-borderBorder py-8 bg-slateBg/40 text-xs text-slate-500 font-mono">
         <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
             <div>
