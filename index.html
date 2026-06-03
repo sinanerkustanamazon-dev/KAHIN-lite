@@ -1,249 +1,1590 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KAHIN Lite — Institutional-Grade Quantitative Intelligence Terminal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        slateBg: '#090d16',
-                        panelCard: '#111726',
-                        borderBorder: '#1e293b',
-                        jadeAccent: '#059669',
-                        alertRisk: '#dc2626'
-                    }
-                }
-            }
-        }
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAHIN Lite — Institutional Macro Intelligence for Retail Investors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #05080f;
+    --surface: #0b101c;
+    --surface2: #111827;
+    --border: #1a2436;
+    --border2: #243044;
+    --jade: #10b981;
+    --jade-dim: #059669;
+    --jade-faint: rgba(16,185,129,0.08);
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --text-dim: #94a3b8;
+    --font-display: 'Syne', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* GRID NOISE BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(16,185,129,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(16,185,129,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* SCANLINE OVERLAY */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  * { position: relative; z-index: 1; }
+
+  /* STATUS TICKER */
+  .ticker {
+    background: rgba(16,185,129,0.06);
+    border-bottom: 1px solid rgba(16,185,129,0.15);
+    padding: 7px 0;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--jade);
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-flex;
+    gap: 60px;
+    animation: ticker 30s linear infinite;
+  }
+  @keyframes ticker {
+    from { transform: translateX(100vw); }
+    to { transform: translateX(-100%); }
+  }
+
+  /* NAV */
+  nav {
+    border-bottom: 1px solid var(--border);
+    background: rgba(5,8,15,0.92);
+    backdrop-filter: blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  .logo-mark {
+    width: 36px; height: 36px;
+    background: var(--jade);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--bg);
+    box-shadow: 0 0 20px rgba(16,185,129,0.3);
+  }
+  .logo-text {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 20px;
+    color: white;
+    letter-spacing: -0.02em;
+  }
+  .logo-text .lite {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--jade);
+    background: var(--jade-faint);
+    border: 1px solid rgba(16,185,129,0.2);
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.1em;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-links a {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+  .nav-links a:hover { color: var(--text); background: var(--surface); border-color: var(--border); }
+  .nav-links a.cta {
+    color: var(--jade);
+    background: var(--jade-faint);
+    border-color: rgba(16,185,129,0.2);
+  }
+  .nav-links a.cta:hover { background: rgba(16,185,129,0.15); }
+
+  /* LAYOUT */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+  .section { padding: 96px 0; }
+  .section-sm { padding: 64px 0; }
+
+  /* HERO */
+  .hero {
+    padding: 120px 0 96px;
+    position: relative;
+  }
+  .hero-grid { display: grid; grid-template-columns: 1fr 420px; gap: 64px; align-items: start; }
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--jade);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--jade);
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 5vw, 68px);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: white;
+    margin-bottom: 28px;
+  }
+  .hero h1 .accent { color: var(--jade); }
+  .hero-sub {
+    font-size: 16px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    max-width: 540px;
+    margin-bottom: 40px;
+  }
+  .hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 48px;
+  }
+  .badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .badge .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--jade);
+    animation: pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  .badge.amber .dot { background: var(--amber); }
+  .badge.green .dot { background: var(--jade); }
+
+  /* BUTTONS */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--jade);
+    color: var(--bg);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 0 30px rgba(16,185,129,0.2);
+  }
+  .btn-primary:hover { background: #0d9f72; box-shadow: 0 0 40px rgba(16,185,129,0.35); transform: translateY(-1px); }
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1px solid var(--border2);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--jade); color: var(--jade); }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+  /* TERMINAL CARD */
+  .terminal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 16px;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    box-shadow: 0 32px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(16,185,129,0.05);
+  }
+  .terminal-header {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .terminal-dots { display: flex; gap: 6px; }
+  .terminal-dots span { width: 10px; height: 10px; border-radius: 50%; }
+  .terminal-dots .r { background: #ef4444; }
+  .terminal-dots .y { background: #f59e0b; }
+  .terminal-dots .g { background: var(--jade); }
+  .terminal-title { font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+  .terminal-body { padding: 20px; space-y: 8px; }
+  .t-line { font-size: 11px; color: var(--text-dim); margin-bottom: 6px; display: flex; gap: 8px; }
+  .t-line .prompt { color: var(--jade); opacity: 0.7; }
+  .t-line.success { color: var(--jade); }
+  .t-line.warn { color: var(--amber); }
+  .t-line.error { color: var(--red); }
+  .t-line.dim { color: var(--text-muted); font-size: 10px; }
+  .t-cursor { display: inline-block; width: 8px; height: 12px; background: var(--jade); animation: blink 1s infinite; vertical-align: text-bottom; }
+  @keyframes blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+
+  /* SECTION HEADERS */
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--jade);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after { content: ''; flex: 1; max-width: 40px; height: 1px; background: var(--jade); opacity: 0.4; }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .section-desc {
+    font-size: 15px;
+    color: var(--text-muted);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 56px;
+  }
+
+  /* STATS STRIP */
+  .stats-strip {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+  .stat-item {
+    background: var(--bg);
+    padding: 32px 40px;
+    text-align: center;
+  }
+  .stat-number {
+    font-family: var(--font-display);
+    font-size: 48px;
+    font-weight: 800;
+    color: white;
+    line-height: 1;
+    margin-bottom: 8px;
+    letter-spacing: -0.03em;
+  }
+  .stat-number span { color: var(--jade); }
+  .stat-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* MODULES GRID */
+  .modules-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .module-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.25s;
+    cursor: default;
+  }
+  .module-card:hover { border-color: var(--border2); background: var(--surface2); transform: translateY(-2px); box-shadow: 0 16px 32px rgba(0,0,0,0.4); }
+  .module-icon {
+    font-size: 22px;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .module-id {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .module-name {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 10px;
+  }
+  .module-desc { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+  .module-tag {
+    display: inline-block;
+    margin-top: 14px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--jade-faint);
+    color: var(--jade);
+    border: 1px solid rgba(16,185,129,0.15);
+    letter-spacing: 0.06em;
+  }
+  .module-tag.amber { background: rgba(245,158,11,0.08); color: var(--amber); border-color: rgba(245,158,11,0.2); }
+  .module-tag.blue { background: rgba(59,130,246,0.08); color: var(--blue); border-color: rgba(59,130,246,0.2); }
+
+  /* ARCHITECTURE DIAGRAM */
+  .arch-flow {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 16px;
+    padding: 40px;
+    font-family: var(--font-mono);
+  }
+  .arch-node {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 16px 20px;
+    text-align: center;
+  }
+  .arch-node .node-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .arch-node .node-title { font-size: 13px; color: white; font-weight: 500; }
+  .arch-node.highlight { border-color: var(--jade); background: var(--jade-faint); }
+  .arch-node.highlight .node-title { color: var(--jade); }
+  .arch-arrow {
+    text-align: center;
+    color: var(--jade);
+    font-size: 18px;
+    padding: 8px 0;
+    opacity: 0.5;
+  }
+  .arch-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 8px; }
+
+  /* PROTOTYPE SCREENS */
+  .prototypes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .proto-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .proto-header {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .proto-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .regime-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+  .regime-red { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+  .regime-green { background: rgba(16,185,129,0.1); color: var(--jade); border: 1px solid rgba(16,185,129,0.2); }
+  .regime-amber { background: rgba(245,158,11,0.1); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+  .proto-body { padding: 20px; }
+
+  /* MOBILE PHONE SHELL */
+  .phone-shell {
+    background: #0a0e1a;
+    border: 1px solid #1e2d44;
+    border-radius: 20px;
+    padding: 12px;
+    max-width: 240px;
+    margin: 0 auto;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+  }
+  .phone-screen { background: var(--bg); border-radius: 12px; overflow: hidden; }
+  .alert-bar {
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .alert-bar.red { background: rgba(239,68,68,0.15); border-bottom: 1px solid rgba(239,68,68,0.2); }
+  .alert-bar.green { background: rgba(16,185,129,0.1); border-bottom: 1px solid rgba(16,185,129,0.15); }
+  .alert-bar.amber { background: rgba(245,158,11,0.1); border-bottom: 1px solid rgba(245,158,11,0.2); }
+  .alert-title { font-family: var(--font-mono); font-size: 9px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+  .alert-title.red { color: #ef4444; }
+  .alert-title.green { color: var(--jade); }
+  .alert-title.amber { color: var(--amber); }
+  .alert-sub { font-size: 9px; color: var(--text-muted); margin-top: 3px; }
+
+  .alloc-section { padding: 12px; }
+  .alloc-title { font-family: var(--font-mono); font-size: 9px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+  .alloc-row { margin-bottom: 8px; }
+  .alloc-meta { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); margin-bottom: 4px; }
+  .alloc-pct { color: var(--jade); font-family: var(--font-mono); font-weight: 500; }
+  .alloc-pct.red { color: #ef4444; }
+  .alloc-pct.amber { color: var(--amber); }
+  .bar-track { background: var(--surface2); border-radius: 3px; height: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+  .bar-jade { background: var(--jade); }
+  .bar-emerald { background: #34d399; }
+  .bar-red { background: #ef4444; }
+  .bar-amber { background: var(--amber); }
+
+  /* STOCK DOCTOR */
+  .stock-lookup { padding: 12px; }
+  .lookup-input { display: flex; gap: 6px; margin-bottom: 10px; }
+  .lookup-field { background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; padding: 6px 10px; font-family: var(--font-mono); font-size: 10px; color: white; flex: 1; }
+  .lookup-btn { background: var(--jade); color: var(--bg); font-family: var(--font-mono); font-size: 9px; font-weight: 500; padding: 6px 10px; border-radius: 6px; border: none; letter-spacing: 0.06em; cursor: pointer; }
+  .stock-result {
+    background: rgba(16,185,129,0.04);
+    border: 1px solid rgba(16,185,129,0.12);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .stock-name { font-size: 11px; font-weight: 600; color: white; }
+  .stock-cls { font-family: var(--font-mono); font-size: 9px; color: var(--jade); letter-spacing: 0.06em; margin-top: 2px; }
+  .score-ring {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--jade);
+    background: rgba(16,185,129,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 800;
+    color: white;
+  }
+  .drivers { space-y: 4px; }
+  .driver { display: flex; align-items: flex-start; gap: 6px; font-size: 9px; color: var(--text-muted); margin-bottom: 5px; line-height: 1.4; }
+  .driver::before { content: '•'; color: var(--jade); flex-shrink: 0; margin-top: 1px; }
+  .audit-proof { background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15); border-radius: 6px; padding: 7px 10px; display: flex; align-items: center; gap: 6px; }
+  .audit-proof .icon { font-size: 12px; }
+  .audit-proof .text { font-family: var(--font-mono); font-size: 9px; color: #60a5fa; letter-spacing: 0.05em; }
+
+  /* AWS SECTION */
+  .aws-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .aws-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+  }
+  .aws-card-icon { font-size: 28px; margin-bottom: 16px; }
+  .aws-card-title {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 10px;
+  }
+  .aws-card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; }
+  .aws-service-list { list-style: none; }
+  .aws-service-list li {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .aws-service-list li:last-child { border: none; }
+  .aws-service-list li::before { content: '›'; color: var(--jade); }
+
+  /* BUDGET TABLE */
+  .budget-table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 12px; }
+  .budget-table th {
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border2);
+    color: var(--text-muted);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .budget-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); color: var(--text-dim); }
+  .budget-table td:first-child { color: white; font-weight: 500; }
+  .budget-table td:last-child { color: var(--jade); text-align: right; font-weight: 500; }
+  .budget-table tr:last-child td { border: none; font-weight: 700; font-size: 13px; }
+  .budget-table tr:last-child td:last-child { color: var(--jade); }
+
+  /* NFR GRID */
+  .nfr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .nfr-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .nfr-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--jade), transparent);
+  }
+  .nfr-num {
+    font-family: var(--font-display);
+    font-size: 48px;
+    font-weight: 800;
+    color: rgba(16,185,129,0.08);
+    line-height: 1;
+    margin-bottom: 16px;
+    letter-spacing: -0.04em;
+  }
+  .nfr-title { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: white; margin-bottom: 10px; }
+  .nfr-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+
+  /* API ENDPOINTS */
+  .endpoint-list { space-y: 12px; }
+  .endpoint {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+  .endpoint:hover { border-color: var(--border2); }
+  .endpoint-method {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 6px;
+    background: rgba(16,185,129,0.1);
+    color: var(--jade);
+    border: 1px solid rgba(16,185,129,0.2);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .endpoint-info { flex: 1; }
+  .endpoint-path { font-family: var(--font-mono); font-size: 13px; color: white; margin-bottom: 6px; }
+  .endpoint-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .endpoint-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    margin-top: 8px;
+  }
+
+  /* AUDIT SECTION */
+  .audit-block {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 16px;
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .audit-chain {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    space-y: 8px;
+  }
+  .chain-step {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .chain-step .step-icon { font-size: 16px; flex-shrink: 0; }
+  .chain-step .step-text { color: var(--text-dim); font-size: 11px; }
+  .chain-step .step-val { font-size: 10px; color: var(--jade); margin-top: 3px; letter-spacing: 0.05em; }
+  .chain-connector { text-align: center; color: var(--jade); opacity: 0.3; font-size: 14px; margin: -2px 0; }
+
+  /* ROADMAP */
+  .roadmap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .roadmap-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .roadmap-phase {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .roadmap-title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 4px;
+  }
+  .roadmap-timeline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--jade);
+    margin-bottom: 16px;
+  }
+  .roadmap-items { list-style: none; }
+  .roadmap-items li {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .roadmap-items li::before { content: '→'; color: var(--jade); opacity: 0.6; flex-shrink: 0; }
+  .roadmap-items li:last-child { border: none; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 48px 0 32px;
+    background: rgba(5,8,15,0.8);
+  }
+  .footer-grid { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: start; margin-bottom: 40px; }
+  .footer-brand { max-width: 320px; }
+  .footer-logo { font-family: var(--font-display); font-size: 18px; font-weight: 800; color: white; margin-bottom: 12px; }
+  .footer-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+  .footer-links { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+  .footer-links a {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--jade); }
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-copy { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+  .footer-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--jade);
+  }
+
+  /* DIVIDER */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+  /* GLOW EFFECTS */
+  .jade-glow { text-shadow: 0 0 20px rgba(16,185,129,0.4); }
+  
+  /* UTILITY */
+  .text-jade { color: var(--jade); }
+  .text-amber { color: var(--amber); }
+  .text-red { color: var(--red); }
+  .mt-4 { margin-top: 16px; }
+  .mb-8 { margin-bottom: 32px; }
+  .flex { display: flex; }
+  .items-center { align-items: center; }
+  .gap-3 { gap: 12px; }
+
+  /* HERO GLOW BG */
+  .hero-glow {
+    position: absolute;
+    top: -200px;
+    right: -100px;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(16,185,129,0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* SCROLL ANIMATIONS */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 900px) {
+    .hero-grid, .aws-grid, .modules-grid { grid-template-columns: 1fr; }
+    .stats-strip { grid-template-columns: repeat(2, 1fr); }
+    .prototypes-grid { grid-template-columns: 1fr; }
+    .nfr-grid { grid-template-columns: 1fr; }
+    .roadmap-grid { grid-template-columns: 1fr; }
+    .audit-block { grid-template-columns: 1fr; }
+    .arch-row { grid-template-columns: 1fr; }
+  }
+</style>
 </head>
-<body class="bg-slateBg text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between">
+<body>
 
-    <!-- Top Status Bar -->
-    <div class="bg-jadeAccent/10 border-b border-jadeAccent/20 py-2 text-center text-xs text-jadeAccent tracking-wide font-mono">
-        STAGING BUILD PROTOCOL // ACTIVE AWS ACTIVATE INFRASTRUCTURE CANDIDATE
+<!-- STATUS TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-inner">
+    <span>⬡ KAHIN LITE v1.1.0 — AWS Activate Candidate</span>
+    <span>GIRM Authority Engine: Active</span>
+    <span>Ingestion Layers: FRED / Yahoo Finance</span>
+    <span>Cryptographic Audit Ledger: SHA256 Verified</span>
+    <span>Look-Ahead Bias Clearance: ENFORCED</span>
+    <span>Local-First Architecture: Zero External SDK Dependency</span>
+    <span>Payload Compression: &lt;250KB / Sync Cycle</span>
+    <span>Dark Pool Monitoring: Active</span>
+    <span>⬡ KAHIN LITE v1.1.0 — AWS Activate Candidate</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-mark">K</div>
+      <span class="logo-text">KAHIN<span class="lite">LITE</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#api">API</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="kahin_lite_docs.html" class="cta">Documentation →</a>
     </div>
+  </div>
+</nav>
 
-    <!-- Navigation Header -->
-    <header class="border-b border-borderBorder bg-slateBg/90 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 bg-jadeAccent rounded flex items-center justify-center font-mono font-black text-white text-lg shadow-lg shadow-jadeAccent/20">K</div>
-                <span class="text-2xl font-black tracking-tight text-white">KAHIN<span class="text-jadeAccent font-light text-xs tracking-widest ml-1.5 uppercase border border-jadeAccent/30 px-2 py-0.5 rounded bg-jadeAccent/5">Lite</span></span>
-            </div>
-            <div class="flex items-center space-x-6">
-                <a href="#prototypes" class="text-xs font-medium tracking-wider text-jadeAccent hover:text-white transition uppercase font-mono bg-jadeAccent/10 px-3 py-1.5 rounded border border-jadeAccent/20">Live Prototypes</a>
-                <a href="#architecture" class="text-xs font-medium tracking-wider text-slate-400 hover:text-white transition uppercase font-mono">Architecture</a>
-            </div>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow">AWS Activate Application — Infrastructure Candidate</div>
+        <h1>
+          Institutional<br>
+          Macro Risk<br>
+          for <span class="accent">Everyone.</span>
+        </h1>
+        <p class="hero-sub">
+          KAHIN Lite is a zero-dependency, local-first mobile decision-support terminal that converts complex multi-layered macroeconomic variables into a single, frictionless risk signal — designed to protect everyday retail investors at institutional-grade precision.
+        </p>
+        <div class="hero-badges">
+          <span class="badge"><span class="dot"></span>Ingestion Engine: Active</span>
+          <span class="badge amber"><span class="dot amber"></span>FRED + Yahoo Finance</span>
+          <span class="badge green"><span class="dot"></span>SHA256 Audit Ledger Verified</span>
+          <span class="badge">🔒 Zero Look-Ahead Bias</span>
+          <span class="badge">📱 Android · Local-First</span>
         </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="flex-grow max-w-6xl w-full mx-auto px-6 py-16">
-        
-        <!-- Hero Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24">
-            <div class="lg:col-span-7 space-y-6 text-left">
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-none">
-                    Democratizing <span class="text-transparent bg-clip-text bg-gradient-to-r from-jadeAccent to-emerald-400">Quantitative</span> Macro Risk Terminals.
-                </h1>
-                <p class="text-base md:text-lg text-slate-400 max-w-xl leading-relaxed">
-                    An uncompromisingly zero-dependency, local-first analytical engine designed for everyday retail investors. KAHIN Lite strips away cognitive overload, converting multi-layered macroeconomic variables into a frictionless decision-support architecture.
-                </p>
-                <div class="pt-2 flex flex-wrap gap-4">
-                    <span class="px-4 py-2 bg-panelCard border border-borderBorder rounded text-xs font-mono text-slate-300 flex items-center">
-                        <span class="w-2 h-2 rounded-full bg-jadeAccent mr-2 animate-ping"></span> Ingestion: Active (FRED/YF)
-                    </span>
-                    <span class="px-4 py-2 bg-panelCard border border-borderBorder rounded text-xs font-mono text-slate-300 flex items-center">
-                        🔒 Zero Look-Ahead Bias Enforced
-                    </span>
-                </div>
-            </div>
-            
-            <div class="lg:col-span-5 bg-panelCard border border-borderBorder rounded-2xl p-6 shadow-2xl font-mono text-xs text-slate-400 space-y-4 relative">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-jadeAccent to-transparent"></div>
-                <div class="flex items-center justify-between border-b border-borderBorder pb-3">
-                    <span class="text-white font-bold text-xs flex items-center">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span> AWS EDGE SYNC LOG
-                    </span>
-                    <span class="text-slate-500">DYNAMIC PAYLOAD</span>
-                </div>
-                <div class="space-y-2 text-[11px]">
-                    <p class="text-slate-300">> AWS S3 Asset serialization complete.</p>
-                    <p class="text-slate-300">> Amazon CloudFront caching active across edge nodes.</p>
-                    <p class="text-jadeAccent">> Look-ahead bias clearance validation: TRUE</p>
-                </div>
-            </div>
+        <div class="hero-actions">
+          <a href="kahin_lite_docs.html" class="btn-primary">View Full Documentation →</a>
+          <a href="#architecture" class="btn-outline">AWS Architecture</a>
         </div>
-
-        <!-- INTERACTIVE PROTOTYPES SECTION (Targeting AWS Reviewers) -->
-        <div id="prototypes" class="space-y-12 mb-24">
-            <div class="text-center md:text-left">
-                <h2 class="text-2xl font-black text-white tracking-tight">Interactive Mobile Client Prototypes</h2>
-                <p class="text-sm text-slate-400">Experience how KAHIN Lite renders heavy cloud analytics into seamless consumer-facing guardrails.</p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                
-                <!-- PROTOTYPE 1: GLOBAL MACRO WEATHER (The Defensive Shield) -->
-                <div class="bg-panelCard border border-borderBorder rounded-2xl p-6 shadow-2xl flex flex-col justify-between space-y-6">
-                    <div>
-                        <div class="flex items-center justify-between border-b border-borderBorder pb-3 mb-4">
-                            <span class="text-xs font-mono text-slate-400 uppercase tracking-widest">Interface Module 01 // The Weather Screen</span>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-red-900/30 text-red-400 border border-red-800/40">GIRM EMERGENCY ENGAGED</span>
-                        </div>
-                        
-                        <!-- Mobile View Render -->
-                        <div class="bg-slateBg rounded-xl p-5 border border-slate-800 font-sans space-y-5">
-                            <!-- Alert Bar -->
-                            <div class="bg-red-900/40 border border-red-700/30 p-3 rounded-lg text-center">
-                                <div class="text-xs font-black text-red-400 tracking-wide uppercase">PİYASA ALARMI: KORUMA KALKANI DEVREDE!</div>
-                                <div class="text-[10px] text-slate-300 mt-1">Riskli varlık dağılımlarını sınırlayın, nakit kalkanını büyütün.</div>
-                            </div>
-
-                            <!-- Portfolio Allocation Tracks -->
-                            <div class="space-y-3">
-                                <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">KAHIN Koruma Kalkanı Dağılım Modeli:</div>
-                                <div class="space-y-2">
-                                    <div>
-                                        <div class="flex justify-between text-xs mb-1 text-slate-300 font-medium"><span>Güvenli Liman Kalkanı (Nakit/Altın)</span><span class="text-jadeAccent font-bold">65%</span></div>
-                                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden"><div class="bg-jadeAccent h-full w-[65%]"></div></div>
-                                    </div>
-                                    <div>
-                                        <div class="flex justify-between text-xs mb-1 text-slate-300 font-medium"><span>Demir Kubbe Varlıkları (Defansif)</span><span class="text-emerald-400 font-bold">25%</span></div>
-                                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden"><div class="bg-emerald-500 h-full w-[25%]"></div></div>
-                                    </div>
-                                    <div>
-                                        <div class="flex justify-between text-xs mb-1 text-slate-400"><span>Yüksek Risk / Spekülatif Büyüme</span><span class="text-red-400 font-bold">10%</span></div>
-                                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden"><div class="bg-red-500 h-full w-[10%]"></div></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-xs text-slate-400 leading-relaxed font-mono bg-slateBg/50 p-3 rounded border border-borderBorder/50">
-                        <strong class="text-white">UX Rationale:</strong> Dynamic constraint multipliers automatically contract speculative growth container targets by 60% during system stress to prevent catastrophic retail capital drawdown.
-                    </div>
-                </div>
-
-                <!-- PROTOTYPE 2: STOCK DOCTOR (Interactive Look-up Simulation) -->
-                <div class="bg-panelCard border border-borderBorder rounded-2xl p-6 shadow-2xl flex flex-col justify-between space-y-6">
-                    <div>
-                        <div class="flex items-center justify-between border-b border-borderBorder pb-3 mb-4">
-                            <span class="text-xs font-mono text-slate-400 uppercase tracking-widest">Interface Module 02 // Stock Diagnostics</span>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-jadeAccent/10 text-jadeAccent border border-jadeAccent/20">DEMO LIVE LOOKUP</span>
-                        </div>
-                        
-                        <!-- Mobile View Render -->
-                        <div class="bg-slateBg rounded-xl p-5 border border-slate-800 font-sans space-y-4">
-                            <!-- Input Simulation Bar -->
-                            <div class="flex gap-2">
-                                <div class="bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs text-white font-mono flex-grow">ASELS</div>
-                                <button class="bg-jadeAccent text-white text-xs font-bold px-4 rounded hover:bg-emerald-700 transition font-mono">SORGULA</button>
-                            </div>
-
-                            <!-- Diagnostic Result Output -->
-                            <div class="flex items-center justify-between bg-slate-900/60 p-3 rounded-lg border border-slate-800">
-                                <div>
-                                    <div class="text-sm font-bold text-white">ASELSAN (ASELS)</div>
-                                    <div class="text-[10px] text-jadeAccent font-mono mt-0.5 uppercase tracking-wider">Classification: Defensive Citadel</div>
-                                </div>
-                                <div class="w-12 h-12 rounded-full border-2 border-jadeAccent flex items-center justify-center bg-jadeAccent/5">
-                                    <span class="text-base font-black text-white">88</span>
-                                </div>
-                            </div>
-
-                            <!-- Drivers List -->
-                            <div class="space-y-1.5 text-[11px] text-slate-300">
-                                <p class="flex items-start"><span class="text-jadeAccent mr-1.5">•</span> Kısa vadeli borç yükümlülüklerine karşı nakit karşılama oranları güçlü.</p>
-                                <p class="flex items-start"><span class="text-jadeAccent mr-1.5">•</span> Ana faaliyet brüt kârlılık marjları tarihsel ortalamada istikrarlı.</p>
-                                <p class="flex items-start"><span class="text-jadeAccent mr-1.5">•</span> SHA256 Ledger Atteştation Proof: Verified Pristine.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-xs text-slate-400 leading-relaxed font-mono bg-slateBg/50 p-3 rounded border border-borderBorder/50">
-                        <strong class="text-white">Data Optimization:</strong> Condenses heavy microstructural balance-sheet tracking records into a simplified 0-100 index accompanied by human-readable explainable driver matrices.
-                    </div>
-                </div>
-
-            </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="terminal-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+            <span class="terminal-title">AWS Edge Sync Log — Live</span>
+            <span style="font-size:10px;color:var(--jade);">● CONNECTED</span>
+          </div>
+          <div class="terminal-body">
+            <div class="t-line"><span class="prompt">$</span><span>kahin-ingest --sources FRED,YF --validate</span></div>
+            <div class="t-line dim">→ Fetching 47 macro indicators...</div>
+            <div class="t-line success">✓ Sanity gates passed. Missing ratio: 2.1%</div>
+            <div class="t-line success">✓ No close-jump outliers detected.</div>
+            <div class="t-line"><span class="prompt">$</span><span>kahin-score --engine GIRM --emit-ledger</span></div>
+            <div class="t-line dim">→ Authority routing: GIRM [2.1] → Sentinel [68] → Regime [72]</div>
+            <div class="t-line success">✓ Composite signal: CONSTRUCTIVE</div>
+            <div class="t-line success">✓ SHA256 block signed. look_ahead_bias=FALSE</div>
+            <div class="t-line"><span class="prompt">$</span><span>aws s3 sync ./payloads s3://kahin-edge --compress</span></div>
+            <div class="t-line dim">→ Serializing to static JSON. Payload: 184KB</div>
+            <div class="t-line success">✓ CloudFront invalidation triggered. Global CDN: Active</div>
+            <div class="t-line"><span class="prompt">$</span><span style="color:var(--text-dim)">_<span class="t-cursor"></span></span></div>
+          </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <!-- Section 3: AWS Infrastructure Deep Dive -->
-        <div id="architecture" class="bg-panelCard border border-borderBorder rounded-2xl p-8 text-left space-y-8">
-            <div class="border-b border-borderBorder pb-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h2 class="text-xl font-extrabold text-white tracking-tight">Asymmetric Cloud-to-Edge Infrastructure</h2>
-                    <p class="text-xs text-slate-400">High-concurrency data engineering map powered by Amazon Web Services</p>
-                </div>
-                <span class="text-[10px] bg-slateBg border border-borderBorder px-3 py-1 text-slate-400 rounded font-mono uppercase tracking-widest">
-                    Topology ID: K-LITE-AWS-2026
-                </span>
-            </div>
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-number">47<span>+</span></div>
+    <div class="stat-label">Macro Indicators Tracked</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number"><span>&lt;</span>250<span>KB</span></div>
+    <div class="stat-label">Daily Sync Payload</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">6<span></span></div>
+    <div class="stat-label">Functional Modules (FR1–FR6)</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">0<span>$</span></div>
+    <div class="stat-label">User Data Uploaded to Cloud</div>
+  </div>
+</div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 font-mono text-xs">
-                <div class="lg:col-span-5 space-y-4 text-slate-400">
-                    <div class="space-y-1">
-                        <h4 class="text-white font-bold uppercase tracking-wider text-xs flex items-center">
-                            <span class="w-1.5 h-1.5 bg-jadeAccent rounded-full mr-2"></span> 1. COMPUTE LAYER [Amazon EC2]
-                        </h4>
-                        <p class="pl-3 text-[11px] leading-relaxed">Processes continuous ingestion schedules utilizing automated data sanity layers to fetch and format multi-source institutional inputs.</p>
-                    </div>
-                    <div class="space-y-1">
-                        <h4 class="text-white font-bold uppercase tracking-wider text-xs flex items-center">
-                            <span class="w-1.5 h-1.5 bg-jadeAccent rounded-full mr-2"></span> 2. BIG DATA MATRIX [ClickHouse Core]
-                        </h4>
-                        <p class="pl-3 text-[11px] leading-relaxed">Deploys localized columnar storage arrays tailored specifically to hold complex multi-variate financial time-series metrics without runtime bottlenecks.</p>
-                    </div>
-                    <div class="space-y-1">
-                        <h4 class="text-white font-bold uppercase tracking-wider text-xs flex items-center">
-                            <span class="w-1.5 h-1.5 bg-jadeAccent rounded-full mr-2"></span> 3. PAYLOAD LOGISTICS [S3 + CloudFront]
-                        </h4>
-                        <p class="pl-3 text-[11px] leading-relaxed">Aggregated matrix metrics serialize directly into highly compressed static payloads distributed over global Content Delivery Networks, minimizing execution costs per user.</p>
-                    </div>
-                </div>
+<!-- FEATURES / MODULES -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-label">Functional Requirements</div>
+    <h2 class="section-title">Six Intelligence Modules.<br>One Unified Risk Signal.</h2>
+    <p class="section-desc">Each module integrates a distinct layer of institutional signal intelligence — from global macro stress to cryptographic proof of fairness.</p>
 
-                <div class="lg:col-span-7 bg-slateBg border border-borderBorder p-5 rounded-xl space-y-3 text-[11px] font-mono text-slate-500">
-                    <div class="text-white font-bold text-xs uppercase tracking-wider border-b border-borderBorder pb-1 text-slate-400">
-                        PIPELINE ROUTING FLOW
-                    </div>
-                    <div class="space-y-1">
-                        <div class="flex items-center text-slate-300">
-                            <span class="text-jadeAccent font-bold mr-2">[RAW FEEDS]</span> ──> Ingestion Engine Execution
-                        </div>
-                        <div class="flex items-center text-slate-300">
-                            <span class="text-jadeAccent font-bold mr-2">[DB HUB]</span> ────> PostgreSQL (Metadata) + ClickHouse (Time-Series Stack)
-                        </div>
-                        <div class="flex items-center text-slate-300">
-                            <span class="text-jadeAccent font-bold mr-2">[TRANSIT]</span> ──> Squeeze & Serialize Target Matrices to JSON Lines
-                        </div>
-                        <div class="flex items-center text-slate-300">
-                            <span class="text-jadeAccent font-bold mr-2">[DISTRIBUTE]</span> ─> Amazon S3 Bucket ──> Amazon CloudFront Edge Nodes
-                        </div>
-                        <div class="flex items-center text-slate-300">
-                            <span class="text-jadeAccent font-bold mr-2">[CLIENT]</span> ─────> Native Room Database Sync (Complete Isolation)
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="modules-grid fade-in">
+      <div class="module-card">
+        <span class="module-icon">🌐</span>
+        <div class="module-id">FR-1 // Macro Weather Dashboard</div>
+        <div class="module-name">Global Macro Weather</div>
+        <p class="module-desc">Real-time authority routing via GIRM, Sentinel, and Regime hierarchy. Translates systemic stress signals into GREEN / YELLOW / RED consumer alerts. Vernacular masking converts TED spreads and repo dynamics into plain-language guidance.</p>
+        <span class="module-tag">GIRM Authority Engine</span>
+      </div>
+      <div class="module-card">
+        <span class="module-icon">🔬</span>
+        <div class="module-id">FR-2 // Stock Diagnostics</div>
+        <div class="module-name">Stock Doctor</div>
+        <p class="module-desc">Single-tap equity scoring from 0–100 condensing current ratios, debt dynamics, operating margins, FCF conversion, and momentum. Surfaces three human-readable explainable audit drivers per asset. Balance sheet manipulation radar active.</p>
+        <span class="module-tag">7 Financial Metrics</span>
+      </div>
+      <div class="module-card">
+        <span class="module-icon">🛡️</span>
+        <div class="module-id">FR-3 // Portfolio Shield</div>
+        <div class="module-name">Dynamic Asset Allocation</div>
+        <p class="module-desc">User portfolio weights stored locally. Optimized defensive allocation projected alongside current configuration. Under RED regime, guard_multiplier contracts speculative growth by up to 60%, expanding capital preservation vaults proportionally.</p>
+        <span class="module-tag amber">Iron Dome Integration</span>
+      </div>
+      <div class="module-card">
+        <span class="module-icon">🧭</span>
+        <div class="module-id">FR-4 // Thematic Discovery</div>
+        <div class="module-name">KAHIN Compass</div>
+        <p class="module-desc">Curated thematic supply-chain cluster discovery matrix. Tracks Iron Dome Defensives, AI Bottleneck Infrastructure Leaders, and Commodity/Energy Shields. Macro-gated access control blocks high-risk themes during RED alert states.</p>
+        <span class="module-tag">Supply-Chain Intelligence</span>
+      </div>
+      <div class="module-card">
+        <span class="module-icon">💡</span>
+        <div class="module-id">FR-5 // Smart Money Pulse</div>
+        <div class="module-name">Institutional Flow Tracker</div>
+        <p class="module-desc">Synthesizes dark pool accumulation signals (DIX >45% threshold), options gamma wall states (negative acceleration vs positive pinning), and unstructured news bulletin sentiment flows into a unified Market Pulse visualization.</p>
+        <span class="module-tag blue">Additional API Interface</span>
+      </div>
+      <div class="module-card">
+        <span class="module-icon">🔐</span>
+        <div class="module-id">FR-6 // Cryptographic Audit</div>
+        <div class="module-name">Ledger Attestation</div>
+        <p class="module-desc">One-tap cryptographic proof verification per asset. SHA256 block signature confirms scoring was logged at market session close with zero retrospective alteration. Enforces available_at_cutoff ≤ decision_time invariant against look-ahead bias.</p>
+        <span class="module-tag blue">SHA256 Ledger Chain</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PROTOTYPE SCREENS -->
+<section class="section" id="prototypes">
+  <div class="container">
+    <div class="section-label">Mobile Interface Prototypes</div>
+    <h2 class="section-title">Institutional Signals.<br>Consumer-Grade Experience.</h2>
+    <p class="section-desc">Live interface mockups demonstrating how heavy cloud analytics render into frictionless mobile guardrails for everyday retail investors.</p>
+
+    <div class="prototypes-grid fade-in">
+      <!-- WEATHER SCREEN -->
+      <div class="proto-card">
+        <div class="proto-header">
+          <span class="proto-label">Module 01 // Macro Weather Screen</span>
+          <span class="regime-badge regime-red">GIRM Emergency</span>
         </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-borderBorder py-8 bg-slateBg/40 text-xs text-slate-500 font-mono">
-        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div>
-                &copy; 2026 KAHIN Lite Workspace. Built for sovereign retail capital protection models.
+        <div class="proto-body">
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <div class="alert-bar red">
+                <div class="alert-title red">⚠ PİYASA ALARMI: KORUMA KALKANI DEVREDE</div>
+                <div class="alert-sub">Riskli varlıkları sınırlayın — nakit kalkanını büyütün.</div>
+              </div>
+              <div class="alloc-section">
+                <div class="alloc-title">KAHIN Koruma Kalkanı Dağılım Modeli</div>
+                <div class="alloc-row">
+                  <div class="alloc-meta"><span>Güvenli Liman (Nakit / Altın)</span><span class="alloc-pct">65%</span></div>
+                  <div class="bar-track"><div class="bar-fill bar-jade" style="width:65%"></div></div>
+                </div>
+                <div class="alloc-row">
+                  <div class="alloc-meta"><span>Demir Kubbe Defansif</span><span class="alloc-pct">25%</span></div>
+                  <div class="bar-track"><div class="bar-fill bar-emerald" style="width:25%"></div></div>
+                </div>
+                <div class="alloc-row">
+                  <div class="alloc-meta"><span>Yüksek Risk / Spekülatif</span><span class="alloc-pct red">10%</span></div>
+                  <div class="bar-track"><div class="bar-fill bar-red" style="width:10%"></div></div>
+                </div>
+                <div style="margin-top:10px;padding:8px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.12);border-radius:6px;">
+                  <div style="font-family:var(--font-mono);font-size:9px;color:#f87171;line-height:1.5;">Finansman stres seviyeleri 48 saatte kritik eşiği aştı. Büyüme varlık hedefleri daraltılıyor.</div>
+                </div>
+              </div>
             </div>
-            <div class="flex space-x-6 text-slate-400">
-                <span>Infrastructure Status: AWS Activate Staging Pipeline Validated</span>
-            </div>
+          </div>
+          <div style="margin-top:16px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;font-size:11px;color:var(--text-muted);font-family:var(--font-mono);">
+            <strong style="color:white;">UX Logic:</strong> Dynamic guard_multiplier contracts speculative growth containers by 60% during systemic stress, preventing catastrophic retail drawdown via automatic visual reallocation.
+          </div>
         </div>
-    </footer>
+      </div>
 
+      <!-- STOCK DOCTOR -->
+      <div class="proto-card">
+        <div class="proto-header">
+          <span class="proto-label">Module 02 // Stock Doctor</span>
+          <span class="regime-badge regime-green">LIVE DEMO</span>
+        </div>
+        <div class="proto-body">
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <div class="alert-bar green">
+                <div class="alert-title green">● STOCK DOCTOR — TEK DOKUNUŞ SORGULAMA</div>
+              </div>
+              <div class="stock-lookup">
+                <div class="lookup-input">
+                  <div class="lookup-field">ASELS</div>
+                  <button class="lookup-btn">SORGULA</button>
+                </div>
+                <div class="stock-result">
+                  <div>
+                    <div class="stock-name">ASELSAN (ASELS)</div>
+                    <div class="stock-cls">Defensive Citadel — İSO:BIST</div>
+                  </div>
+                  <div class="score-ring">88</div>
+                </div>
+                <div class="drivers">
+                  <div class="driver">Nakit karşılama oranları kısa vadeli borç yükümlülükleri için güçlü seviyede.</div>
+                  <div class="driver">Brüt kârlılık marjları tarihsel ortalamada istikrarlı seyrediyor.</div>
+                  <div class="driver">Uzun vadeli savunma sanayi siparişleri nakit akışını güvence altına alıyor.</div>
+                </div>
+                <div style="margin-top:8px;" class="audit-proof">
+                  <span class="icon">🔐</span>
+                  <span class="text">SHA256 LEDGER — VERIFIED PRISTINE</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:16px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;font-size:11px;color:var(--text-muted);font-family:var(--font-mono);">
+            <strong style="color:white;">Data Stack:</strong> Condenses 7 balance-sheet metrics into a 0–100 integer score with 3 human-readable audit drivers — no financial literacy required.
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPASS -->
+      <div class="proto-card">
+        <div class="proto-header">
+          <span class="proto-label">Module 03 // KAHIN Compass</span>
+          <span class="regime-badge regime-amber">MACRO RESTRICTED</span>
+        </div>
+        <div class="proto-body">
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <div class="alert-bar amber">
+                <div class="alert-title amber">⚡ TEMATİK SEPET KEŞFİ</div>
+              </div>
+              <div style="padding:10px;">
+                <div style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);border-radius:8px;padding:10px;margin-bottom:8px;">
+                  <div style="font-family:var(--font-mono);font-size:9px;color:var(--jade);">● KAHIN EN UYGUN SEÇİM</div>
+                  <div style="font-size:11px;color:white;font-weight:600;margin:4px 0;">Demir Kubbe Defansif</div>
+                  <div style="font-size:9px;color:var(--text-muted);">ASML · TSMC · HWM</div>
+                  <div style="margin-top:6px;display:flex;justify-content:space-between;">
+                    <span style="font-family:var(--font-mono);font-size:9px;color:var(--jade);">RISK: LOW</span>
+                    <span style="font-family:var(--font-mono);font-size:9px;color:var(--jade);">ACTIVE</span>
+                  </div>
+                </div>
+                <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);border-radius:8px;padding:10px;opacity:0.7;">
+                  <div style="font-family:var(--font-mono);font-size:9px;color:#f87171;">⚠ MAKRO REJİM KISITLAMASI</div>
+                  <div style="font-size:11px;color:var(--text-dim);font-weight:600;margin:4px 0;">YZ Darboğaz Öncüleri</div>
+                  <div style="font-size:9px;color:var(--text-muted);">NVDA · ASML · TSMC</div>
+                  <div style="margin-top:6px;display:flex;justify-content:space-between;">
+                    <span style="font-family:var(--font-mono);font-size:9px;color:#f87171;">RISK: HIGH</span>
+                    <span style="font-family:var(--font-mono);font-size:9px;color:#f87171;">RESTRICTED</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:16px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;font-size:11px;color:var(--text-muted);font-family:var(--font-mono);">
+            <strong style="color:white;">Macro Gating:</strong> Under RED alert, high-risk themes are visually bottlenecked — preventing retail capital deployment into vulnerable vectors automatically.
+          </div>
+        </div>
+      </div>
+
+      <!-- SMART MONEY -->
+      <div class="proto-card">
+        <div class="proto-header">
+          <span class="proto-label">Module 04 // Smart Money Pulse</span>
+          <span class="regime-badge regime-green">INSTITUTIONAL FEED</span>
+        </div>
+        <div class="proto-body">
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <div class="alert-bar green">
+                <div class="alert-title green">📡 SMART MONEY PULSE</div>
+              </div>
+              <div style="padding:10px;space-y:8px;">
+                <div style="background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.12);border-radius:8px;padding:10px;margin-bottom:8px;">
+                  <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);margin-bottom:4px;">DARK POOL</div>
+                  <div style="font-size:11px;color:var(--jade);font-weight:600;">ACTIVE ACCUMULATION</div>
+                  <div style="font-size:9px;color:var(--text-muted);margin-top:3px;">DIX: 46.5% — Kurumsal alım eğilimi sürdürüyor.</div>
+                </div>
+                <div style="background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.12);border-radius:8px;padding:10px;margin-bottom:8px;">
+                  <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);margin-bottom:4px;">OPTIONS GAMMA</div>
+                  <div style="font-size:11px;color:#60a5fa;font-weight:600;">POSITIVE PINNING</div>
+                  <div style="font-size:9px;color:var(--text-muted);margin-top:3px;">GEX: STABLE — Büyük aşağı dalgalanmalar frenleniyor.</div>
+                </div>
+                <div style="background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.12);border-radius:8px;padding:10px;">
+                  <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);margin-bottom:4px;">HABER AKIŞI</div>
+                  <div style="font-size:11px;color:var(--amber);font-weight:600;">YAPISAL ENFLASYON</div>
+                  <div style="font-size:9px;color:var(--text-muted);margin-top:3px;">FED Bilançosu daralma • Emtia baskısı</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:16px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;font-size:11px;color:var(--text-muted);font-family:var(--font-mono);">
+            <strong style="color:white;">Signal Synthesis:</strong> Institutional dark pool flows, options gamma structure, and news sentiment vectored into one unified pulse — no Bloomberg terminal required.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ARCHITECTURE -->
+<section class="section" id="architecture">
+  <div class="container">
+    <div class="section-label">Technical Infrastructure</div>
+    <h2 class="section-title">Asymmetric Cloud-to-Edge<br>Architecture.</h2>
+    <p class="section-desc">Heavy computation concentrated in AWS infrastructure. Absolute privacy executed on the device. Zero per-user database cost. Sub-250KB daily sync payload.</p>
+
+    <div class="arch-flow fade-in">
+      <div style="text-align:center;margin-bottom:32px;">
+        <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;">Topology ID: K-LITE-AWS-2026 — Asymmetric Compute Flow</span>
+      </div>
+
+      <div class="arch-row" style="margin-bottom:0;">
+        <div class="arch-node">
+          <div class="node-label">Data Sources</div>
+          <div class="node-title">FRED API · Yahoo Finance · Exchange Feeds · SEC Filings</div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;color:var(--jade);opacity:0.4;font-size:28px;">→</div>
+        <div class="arch-node highlight">
+          <div class="node-label">Compute Layer — AWS EC2 t3.micro</div>
+          <div class="node-title">GIRM Stress Lab · Score Engines · Sanity Gates · Audit Ledger</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-row" style="margin-bottom:0;">
+        <div class="arch-node highlight">
+          <div class="node-label">Time-Series DB</div>
+          <div class="node-title">ClickHouse — Columnar Multi-Variate Financial Metrics</div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;color:var(--jade);opacity:0.4;font-size:28px;">+</div>
+        <div class="arch-node">
+          <div class="node-label">Relational DB</div>
+          <div class="node-title">PostgreSQL — Metadata · Ledger Hashes · Baskets</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-row" style="margin-bottom:0;">
+        <div class="arch-node highlight">
+          <div class="node-label">Static Payload — AWS S3</div>
+          <div class="node-title">Serialized JSON Lines → Binary Compressed (&lt;250KB)</div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;color:var(--jade);opacity:0.4;font-size:28px;">→</div>
+        <div class="arch-node highlight">
+          <div class="node-label">Distribution — Amazon CloudFront</div>
+          <div class="node-title">Global CDN Edge Nodes · TLS Encrypted · Cache-First</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div style="text-align:center;">
+        <div class="arch-node" style="max-width:500px;margin:0 auto;border-color:rgba(16,185,129,0.3);">
+          <div class="node-label">Android Client — Local-First Isolation Layer</div>
+          <div class="node-title">Room/SQLite Cache · On-Device Encryption · Zero Data Exhaust · Snapshot Fallback Mode</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px;padding-top:32px;border-top:1px solid var(--border);">
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Compute Cost</div>
+          <div style="font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--jade);">$0.00</div>
+          <div style="font-size:11px;color:var(--text-muted);">EC2 t3.micro — Free Tier</div>
+        </div>
+        <div style="text-align:center;border-left:1px solid var(--border);border-right:1px solid var(--border);">
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Monthly Burn Rate</div>
+          <div style="font-family:var(--font-display);font-size:24px;font-weight:800;color:white;">~$8.33</div>
+          <div style="font-size:11px;color:var(--text-muted);">Total infra cost / month</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Credit Runway</div>
+          <div style="font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--jade);">12 mo</div>
+          <div style="font-size:11px;color:var(--text-muted);">$100 AWS Credit</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- AWS SERVICES -->
+<section class="section-sm" id="aws">
+  <div class="container">
+    <div class="section-label">AWS Service Stack</div>
+    <h2 class="section-title">Built for AWS Activate.</h2>
+    <p class="section-desc">Every architectural decision optimized for the AWS ecosystem — from Free Tier compute to global edge distribution.</p>
+
+    <div class="aws-grid fade-in">
+      <div class="aws-card">
+        <div class="aws-card-icon">🖥️</div>
+        <div class="aws-card-title">Compute & Ingestion Layer</div>
+        <p class="aws-card-desc">Automated cron-scheduled ingestion runs twice daily on a Free Tier instance — preventing continuous CPU burn while keeping macro data current. Sanity validation gates run inline before any data reaches scoring models.</p>
+        <ul class="aws-service-list">
+          <li>Amazon EC2 t3.micro — 750hrs/month Free Tier</li>
+          <li>Automated cron ingestion scheduling</li>
+          <li>Python standard library — zero heavy dependencies</li>
+          <li>AWS Lambda for non-peak auto-shutdown</li>
+        </ul>
+      </div>
+      <div class="aws-card">
+        <div class="aws-card-icon">📦</div>
+        <div class="aws-card-title">Storage & Distribution Layer</div>
+        <p class="aws-card-desc">Analytical conclusions serialized into highly compressed static JSON payloads and distributed globally via CloudFront — eliminating costly database read operations and reducing per-user infrastructure overhead to near-zero.</p>
+        <ul class="aws-service-list">
+          <li>Amazon S3 — Static immutable payload store</li>
+          <li>Amazon CloudFront — Global CDN distribution</li>
+          <li>Binary compression targeting &lt;250KB/sync</li>
+          <li>Cache-first architecture — minimal S3 request cost</li>
+        </ul>
+      </div>
+      <div class="aws-card">
+        <div class="aws-card-icon">🗄️</div>
+        <div class="aws-card-title">Data Intelligence Layer</div>
+        <p class="aws-card-desc">ClickHouse handles columnar time-series storage for multi-variate financial metrics without runtime bottlenecks. PostgreSQL manages relational metadata, audit ledger hashes, and basket definitions. RDS avoided entirely for MVP phase.</p>
+        <ul class="aws-service-list">
+          <li>ClickHouse — Columnar time-series engine</li>
+          <li>PostgreSQL — Metadata & ledger relational store</li>
+          <li>Redis — Caching layer for hot indicator access</li>
+          <li>No RDS — client-side Room DB offloads query cost</li>
+        </ul>
+      </div>
+      <div class="aws-card">
+        <div class="aws-card-icon">💰</div>
+        <div class="aws-card-title">12-Month Budget Strategy</div>
+        <p class="aws-card-desc">The $100 AWS Activate credit structured as a 12-month strategic runway. AWS Budgets alerts configured at $8.00 to prevent cost overruns. Silent billing creep eliminated through monthly resource lifecycle audits.</p>
+        <div style="margin-top:20px;">
+          <table class="budget-table">
+            <thead>
+              <tr><th>Service</th><th>Model</th><th>Est. / Mo</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>EC2 t3.micro</td><td>Free Tier 750h</td><td>$0.00</td></tr>
+              <tr><td>Amazon S3</td><td>Static payloads</td><td>~$0.10</td></tr>
+              <tr><td>CloudFront</td><td>CDN distribution</td><td>~$0.20</td></tr>
+              <tr><td>Ops Buffer</td><td>Spike contingency</td><td>~$8.03</td></tr>
+              <tr><td><strong>Total</strong></td><td></td><td><strong>~$8.33</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- API ENDPOINTS -->
+<section class="section" id="api">
+  <div class="container">
+    <div class="section-label">API Specification</div>
+    <h2 class="section-title">Five RESTful Endpoints.<br>Zero Bloat.</h2>
+    <p class="section-desc">Stateless, lightweight API layer serving compressed analytical payloads from CloudFront edge nodes. All responses under 250KB per sync cycle.</p>
+
+    <div class="endpoint-list fade-in">
+      <div class="endpoint">
+        <span class="endpoint-method">GET</span>
+        <div class="endpoint-info">
+          <div class="endpoint-path">/api/v1/retail/macro-weather</div>
+          <p class="endpoint-desc">Returns current GIRM composite score, macro regime state (GREEN/YELLOW/RED), authority routing trace, and optimized defensive allocation model. Core endpoint — called on every app launch.</p>
+          <div class="endpoint-tag">Modules: GIRM · Sentinel · Regime · Iron Dome</div>
+        </div>
+      </div>
+      <div class="endpoint">
+        <span class="endpoint-method">GET</span>
+        <div class="endpoint-info">
+          <div class="endpoint-path">/api/v1/retail/stock/{ticker}</div>
+          <p class="endpoint-desc">Returns the composite quality score (0–100), three explainable audit driver strings, fraud/anomaly warning badge, and cryptographic attestation block index for any equity identifier.</p>
+          <div class="endpoint-tag">Module: Stock Scoring Engine (7 financial metrics)</div>
+        </div>
+      </div>
+      <div class="endpoint">
+        <span class="endpoint-method">GET</span>
+        <div class="endpoint-info">
+          <div class="endpoint-path">/api/v1/retail/baskets</div>
+          <p class="endpoint-desc">Returns the full thematic cluster discovery matrix — Iron Dome Defensives, AI Bottleneck Leaders, Commodity Shields — including macro-gated access status per basket based on current regime state.</p>
+          <div class="endpoint-tag">Module: KAHIN Compass · Thematic Rotation</div>
+        </div>
+      </div>
+      <div class="endpoint">
+        <span class="endpoint-method">GET</span>
+        <div class="endpoint-info">
+          <div class="endpoint-path">/api/v1/retail/smart-money</div>
+          <p class="endpoint-desc">Synthesized institutional signal stream — dark pool DIX threshold status, options gamma regime (positive pinning vs negative acceleration), and news bulletin sentiment vector flags. Additional API interface.</p>
+          <div class="endpoint-tag">Modules: Smart Money Engine (M10) · Bulletin Intelligence (M09)</div>
+        </div>
+      </div>
+      <div class="endpoint">
+        <span class="endpoint-method">GET</span>
+        <div class="endpoint-info">
+          <div class="endpoint-path">/api/v1/retail/audit/verify/{block_index}</div>
+          <p class="endpoint-desc">Queries the cryptographic proof engine to verify SHA256 block signature, confirming score calculation timestamp, look-ahead bias clearance flag, and available_at_cutoff ≤ decision_time invariant. Additional API interface.</p>
+          <div class="endpoint-tag">Module: Cryptographic Audit Ledger (M15)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- AUDIT CHAIN -->
+<section class="section-sm">
+  <div class="container">
+    <div class="section-label">Trust Architecture</div>
+    <h2 class="section-title">Cryptographic Proof of Fairness.</h2>
+    <p class="section-desc">Every scoring decision is cryptographically signed at market session close. Look-ahead bias is mathematically impossible by design.</p>
+
+    <div class="audit-block fade-in">
+      <div>
+        <div class="chain-step">
+          <span class="step-icon">📡</span>
+          <div>
+            <div class="step-text">Raw data ingested with explicit timestamps</div>
+            <div class="step-val">event_time · source_synced_at · available_at</div>
+          </div>
+        </div>
+        <div class="chain-connector">↓</div>
+        <div class="chain-step">
+          <span class="step-icon">🔍</span>
+          <div>
+            <div class="step-text">Sanity gates validate data quality</div>
+            <div class="step-val">Missing ratio · Jump outlier · Freshness window</div>
+          </div>
+        </div>
+        <div class="chain-connector">↓</div>
+        <div class="chain-step">
+          <span class="step-icon">⚙️</span>
+          <div>
+            <div class="step-text">Pure function engines compute scores</div>
+            <div class="step-val">Immutable IngestionBatch input — no side effects</div>
+          </div>
+        </div>
+        <div class="chain-connector">↓</div>
+        <div class="chain-step">
+          <span class="step-icon">🔐</span>
+          <div>
+            <div class="step-text">SHA256 block signed at session close</div>
+            <div class="step-val">available_at_cutoff ≤ decision_time — enforced</div>
+          </div>
+        </div>
+        <div class="chain-connector">↓</div>
+        <div class="chain-step" style="border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.04);">
+          <span class="step-icon">✅</span>
+          <div>
+            <div class="step-text" style="color:var(--jade);">Retail client verifies with one tap</div>
+            <div class="step-val">VERIFIED_MATURED_PROVEN — look_ahead_bias: false</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:24px;font-family:var(--font-mono);font-size:11px;">
+          <div style="color:var(--text-muted);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:12px;">SAMPLE LEDGER RESPONSE</div>
+          <div style="color:var(--text-dim);line-height:2;">
+            <span style="color:var(--text-muted);">{</span><br>
+            &nbsp;&nbsp;<span style="color:#60a5fa;">"verified_block_index"</span>: <span style="color:var(--jade);">48291</span>,<br>
+            &nbsp;&nbsp;<span style="color:#60a5fa;">"verification_status"</span>: <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--jade);">"VERIFIED_MATURED_PROVEN"</span>,<br>
+            &nbsp;&nbsp;<span style="color:#60a5fa;">"sha256_payload_hash"</span>: <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--amber);">"a1b2c3d4e5f6...f6"</span>,<br>
+            &nbsp;&nbsp;<span style="color:#60a5fa;">"look_ahead_bias_clearance"</span>: <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--jade);">true</span>,<br>
+            &nbsp;&nbsp;<span style="color:#60a5fa;">"decision_time_utc"</span>: <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--amber);">"2026-06-02T21:00:00Z"</span><br>
+            <span style="color:var(--text-muted);">}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- NFR -->
+<section class="section-sm">
+  <div class="container">
+    <div class="section-label">Non-Functional Requirements</div>
+    <h2 class="section-title">Built for Scale. Built for Trust.</h2>
+
+    <div class="nfr-grid fade-in">
+      <div class="nfr-card">
+        <div class="nfr-num">01</div>
+        <div class="nfr-title">Local-First Resilience</div>
+        <p class="nfr-desc">If a sync cycle fails, the client automatically loads the last valid Room database cache. A SNAPSHOT FALLBACK MODE banner displays at the footer. The UI remains fully responsive — zero white screens for retail users.</p>
+      </div>
+      <div class="nfr-card">
+        <div class="nfr-num">02</div>
+        <div class="nfr-title">Zero Data Exhaust</div>
+        <p class="nfr-desc">User watchlists, portfolio weights, and financial inputs are strictly bound to the device's native SQLite layer. No user-owned financial data is ever uploaded to the central server — eliminating data breach liability and per-user cloud database costs entirely.</p>
+      </div>
+      <div class="nfr-card">
+        <div class="nfr-num">03</div>
+        <div class="nfr-title">Edge Payload Discipline</div>
+        <p class="nfr-desc">All remote data packets are binary-compressed before transmission, targeting under 250KB per daily sync cycle. On-device SQLite tables tracking user watchlists are encrypted via Android hardware storage verification contexts.</p>
+      </div>
+      <div class="nfr-card">
+        <div class="nfr-num">04</div>
+        <div class="nfr-title">Data Sanity Gates</div>
+        <p class="nfr-desc">Before any sync updates local tables, incoming payloads pass client-side structural validation: payload missing ratio under 30%, close-jump outlier protection at 50% single-day threshold, and freshness window enforcement — mirroring server-side M02 quality standards.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ROADMAP -->
+<section class="section" id="roadmap">
+  <div class="container">
+    <div class="section-label">Development Roadmap</div>
+    <h2 class="section-title">12-Month Execution Plan.</h2>
+    <p class="section-desc">Three phases from infrastructure validation to multi-market expansion, designed around the AWS Activate credit runway.</p>
+
+    <div class="roadmap-grid fade-in">
+      <div class="roadmap-card" style="border-color:rgba(16,185,129,0.2);">
+        <div class="roadmap-phase">Phase 1</div>
+        <div class="roadmap-title">Foundation</div>
+        <div class="roadmap-timeline">Months 1–3 // Current</div>
+        <ul class="roadmap-items">
+          <li>AWS EC2 ingestion pipeline live</li>
+          <li>GIRM + Sentinel + Regime engine operational</li>
+          <li>S3 + CloudFront payload distribution active</li>
+          <li>Android MVP — Weather + Stock Doctor screens</li>
+          <li>SHA256 audit ledger chain operational</li>
+          <li>AWS Budgets alerts configured at $8.00</li>
+        </ul>
+      </div>
+      <div class="roadmap-card">
+        <div class="roadmap-phase">Phase 2</div>
+        <div class="roadmap-title">Expansion</div>
+        <div class="roadmap-timeline">Months 4–8</div>
+        <ul class="roadmap-items">
+          <li>KAHIN Compass thematic baskets UI</li>
+          <li>Smart Money Pulse dark pool feed</li>
+          <li>Portfolio Shield dynamic allocation module</li>
+          <li>Bulletin Intelligence news sentiment layer</li>
+          <li>Turkish equity universe expansion (BIST)</li>
+          <li>Beta testing with 500+ retail users</li>
+        </ul>
+      </div>
+      <div class="roadmap-card">
+        <div class="roadmap-phase">Phase 3</div>
+        <div class="roadmap-title">Scale</div>
+        <div class="roadmap-timeline">Months 9–12</div>
+        <ul class="roadmap-items">
+          <li>Multi-region CloudFront edge optimization</li>
+          <li>Push notification alert system</li>
+          <li>Watchlist collaborative sharing features</li>
+          <li>Apple iOS companion app</li>
+          <li>Premium subscription tier architecture</li>
+          <li>10,000+ active user milestone target</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">KAHIN Lite</div>
+        <p class="footer-desc">An institutional-grade macro risk terminal for everyday retail investors. Zero-dependency. Local-first. Cryptographically verified. Built for the AWS Activate ecosystem.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#features">Features</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#api">API Reference</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="kahin_lite_docs.html">Full Documentation</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 KAHIN Lite — Sovereign Retail Capital Protection Infrastructure</span>
+      <div class="footer-status">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--jade);animation:pulse-dot 2s infinite;"></span>
+        AWS Activate Staging — Infrastructure Validated
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Intersection Observer for fade-in animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Ticker duplication for seamless loop
+  const tickerInner = document.querySelector('.ticker-inner');
+  if (tickerInner) {
+    tickerInner.innerHTML += tickerInner.innerHTML;
+  }
+</script>
 </body>
 </html>
